@@ -32,13 +32,13 @@ models.o: models/models.c include/models.h /usr/include/stdio.h \
  /usr/lib/gcc-lib/i586-mandrake-linux/2.95.3/include/stdarg.h \
  /usr/include/bits/types.h /usr/include/libio.h \
  /usr/include/_G_config.h /usr/include/bits/stdio_lim.h \
- /usr/include/bits/stdio.h include/md2.h /usr/include/stdlib.h \
- /usr/include/sys/types.h /usr/include/time.h /usr/include/endian.h \
- /usr/include/bits/endian.h /usr/include/sys/select.h \
- /usr/include/bits/select.h /usr/include/bits/sigset.h \
- /usr/include/sys/sysmacros.h /usr/include/alloca.h \
- /usr/include/string.h /usr/include/bits/string.h \
- /usr/include/bits/string2.h
+ /usr/include/bits/stdio.h include/md2.h include/obj.h \
+ /usr/include/stdlib.h /usr/include/sys/types.h /usr/include/time.h \
+ /usr/include/endian.h /usr/include/bits/endian.h \
+ /usr/include/sys/select.h /usr/include/bits/select.h \
+ /usr/include/bits/sigset.h /usr/include/sys/sysmacros.h \
+ /usr/include/alloca.h /usr/include/string.h \
+ /usr/include/bits/string.h /usr/include/bits/string2.h
 md2.o: models/md2/md2.c /usr/include/stdlib.h /usr/include/features.h \
  /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h \
  /usr/lib/gcc-lib/i586-mandrake-linux/2.95.3/include/stddef.h \
@@ -61,6 +61,22 @@ md2.o: models/md2/md2.c /usr/include/stdlib.h /usr/include/features.h \
  /usr/include/linux/byteorder/swab.h \
  /usr/include/linux/byteorder/generic.h /usr/include/assert.h \
  include/md2.h include/models.h include/textures.h models/md2/anorms.h
+obj.o: models/obj/obj.c /usr/local/include/GL/gl.h \
+ /usr/local/include/GL/glext.h /usr/local/include/GL/glu.h \
+ include/obj.h /usr/include/stdio.h /usr/include/features.h \
+ /usr/include/sys/cdefs.h /usr/include/gnu/stubs.h \
+ /usr/lib/gcc-lib/i586-mandrake-linux/2.95.3/include/stddef.h \
+ /usr/lib/gcc-lib/i586-mandrake-linux/2.95.3/include/stdarg.h \
+ /usr/include/bits/types.h /usr/include/libio.h \
+ /usr/include/_G_config.h /usr/include/bits/stdio_lim.h \
+ /usr/include/bits/stdio.h include/models.h include/textures.h \
+ /usr/include/string.h /usr/include/bits/string.h \
+ /usr/include/bits/string2.h /usr/include/endian.h \
+ /usr/include/bits/endian.h /usr/include/stdlib.h \
+ /usr/include/sys/types.h /usr/include/time.h \
+ /usr/include/sys/select.h /usr/include/bits/select.h \
+ /usr/include/bits/sigset.h /usr/include/sys/sysmacros.h \
+ /usr/include/alloca.h
 textures.o: textures/textures.c /usr/local/include/GL/gl.h \
  /usr/local/include/GL/glext.h /usr/local/include/GL/glu.h \
  /usr/include/SDL/SDL_image.h /usr/include/SDL/SDL.h \

@@ -287,7 +287,7 @@ void init(const char *modelfile, const char *weaponfile, const char *skinfile) {
     // not.
     glPolygonMode(GL_FRONT, GL_FILL);
     // glPolygonMode(GL_BACK, GL_LINE);
-    glFrontFace(GL_CW);
+    // glFrontFace(GL_CW);
     glCullFace(GL_BACK);
     glEnable(GL_CULL_FACE);
 
@@ -403,12 +403,12 @@ int main(int argc, char *argv[]) {
 
     // Set the title of the Window, and use the default icon.  We could
     // specify an icon for the window, if we had one.
-    SDL_WM_SetCaption("MD2 Viewer", NULL);
+    SDL_WM_SetCaption("Model Viewer", NULL);
 
-    // Initialize the MD2 viewer
+    // Initialize the viewer
     init(argv[1], argv[2], argv[3]);
 
-    // Display the MD2 model for the first time
+    // Display the model for the first time
     set_window_size(640, 480);
     display();
 

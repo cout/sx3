@@ -8,6 +8,7 @@ SECTION = 1
 LIBSRC= \
     models/models.c \
 	models/md2/md2.c \
+    models/obj/obj.c \
 	textures/textures.c
 LIBOBJ=$(LIBSRC:.c=.o)
 LIBOUT=libgfx.a
