@@ -1,8 +1,8 @@
 LIBSRC= \
-    models/models.c \
-	models/md2/md2.c \
-    models/obj/obj.c \
-	textures/textures.c
+    models.c \
+	md2.c \
+    obj.c \
+	textures.c
 LIBOBJ=$(LIBSRC:.c=.o)
 LIBOUT=libgfx.a
 
@@ -14,9 +14,7 @@ SRC=$(MAINSRC) $(LIBSRC)
 OBJ=$(MAINOBJ) $(LIBOBJ)
 OUT=$(MAINOUT) $(LIBOUT)
 
-HEADERS=include/md2.h include/models.h include/textures.h
-
-INCLUDES+=-Iinclude -I/usr/local/include
+HEADERS=md2.h models.h textures.h
 
 CFLAGS+=-g -O2 -Wall $(GL_CFLAGS) $(SDL_CFLAGS)
 LIBS+=-lm $(GL_LIBS) $(SDL_LIBS)
