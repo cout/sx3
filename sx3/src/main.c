@@ -67,10 +67,12 @@ int try_gl_mode(int fullscreen, const struct Video_Mode *vid_mode)
 {
     int sdl_fullscreen = fullscreen?SDL_FULLSCREEN:0;
 
+/*
     SDL_GL_SetAttribute(SDL_GL_RED_SIZE, vid_mode->red_size);
     SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, vid_mode->green_size);
     SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, vid_mode->blue_size);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, vid_mode->depth_size);
+*/
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, vid_mode->double_buffer);
 
     printf("Trying video mode %dx%dx%d, RGB bits=[%d %d %d], "
