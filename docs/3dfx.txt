@@ -64,6 +64,7 @@ environment variables:
     SST_PCIRD=1
     SST_GRXCLK=57
     SST_SWAP_EN_WAIT_ON_VIDSYNC=0
+    FX_GLIDE_SWAPINTERVAL=0
 
 If the image shows up too dardk (i.e. you have an old monitor), or if you want
 to get 800x600 mode, but the default refresh rate is too high, or if you want
