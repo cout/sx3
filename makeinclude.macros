@@ -75,7 +75,7 @@ libinstall: headerinstall
 	cp $(LIBOUT) $(LIBDIR)
 
 headerinstall:
-	$(MKDIR_START) $(LIBDIR) $(MKDIR) $(INCDIR)
+	$(MKDIR_START) $(INCDIR) $(MKDIR) $(INCDIR)
 	cp $(HEADERS) $(INCDIR)
 
 depend: dep
