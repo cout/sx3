@@ -135,10 +135,10 @@ const char *ini_get_value(
 
     INI_Section *sec = ini->first_section;
     while(sec) {
-        if(!strcmp(section, sec->name)) {
+        if(!strcasecmp(section, sec->name)) {
             INI_Entry *ent = sec->first_entry;
             while(ent) {
-                if(!strcmp(var, ent->name)) {
+                if(!strcasecmp(var, ent->name)) {
                     return ent->value;
                 }
                 ent = ent->next_entry;
