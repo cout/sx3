@@ -4,51 +4,51 @@
 all: ctl_ gfx_ gltext_ matrix_ physics_ ini_ utils_ console_ sx3_
 
 gfx_:
-	make -C gfx
-	make -C gfx install
+	$(MAKE) -C gfx
+	$(MAKE) -C gfx install
 
 gltext_:
-	make -C gltext
-	make -C gltext install
+	$(MAKE) -C gltext
+	$(MAKE) -C gltext install
 
 matrix_:
-	make -C matrix install
+	$(MAKE) -C matrix install
 
 physics_:
-	make -C physics
-	make -C physics install
+	$(MAKE) -C physics
+	$(MAKE) -C physics install
 
 sx3_:
-	make -C sx3
+	$(MAKE) -C sx3
 
 ini_:
-	make -C libini
-	make -C libini install
+	$(MAKE) -C libini
+	$(MAKE) -C libini install
 
 utils_:
-	make -C utils
-	make -C utils install
+	$(MAKE) -C utils
+	$(MAKE) -C utils install
 
 console_:
-	make -C console
-	make -C console install
+	$(MAKE) -C console
+	$(MAKE) -C console install
 
 ctl_:
-	make -C ctl
-	make -C ctl install
+	$(MAKE) -C ctl
+	$(MAKE) -C ctl install
 
 clean:
-	make -C gfx clean
-	make -C gltext clean
-	make -C physics clean
-	make -C sx3 clean
+	$(MAKE) -C gfx clean
+	$(MAKE) -C gltext clean
+	$(MAKE) -C physics clean
+	$(MAKE) -C sx3 clean
 
 dep:
 	touch sx3/Makefile.d
 	touch gfx/Makefile.d
 	touch physics/Makefile.d
 	touch gltext/Makefile.d
-	make -C gfx dep
-	make -C gltext dep
-	make -C physics dep
-	make -C sx3 dep
+	$(MAKE) -C gfx dep
+	$(MAKE) -C gltext dep
+	$(MAKE) -C physics dep
+	$(MAKE) -C sx3 dep
