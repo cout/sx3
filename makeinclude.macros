@@ -23,8 +23,8 @@ ifeq ($(COMSPEC),)
 
 	LDFLAGS+=-L/usr/local/lib -L/usr/X11R6/lib
 
-	MKDIR_START=
-	MKDIR=mkdir -p
+	MKDIR_START=mkdir -p
+	MKDIR=
 else
 	REALMAINOUT=$(addsuffix .exe,$(MAINOUT))
 
