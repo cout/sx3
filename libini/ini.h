@@ -15,7 +15,7 @@ void ini_free_context(INI_Context *context);
 int ini_load_config_file(INI_Context *ini, const char *filename);
 
 const char *ini_get_value(
-    INI_Context *ini,
+    const INI_Context *ini,
     const char *section,
     const char *var);
     

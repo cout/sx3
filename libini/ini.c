@@ -1,21 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include <ctl/c_hash.h>
 
 typedef struct INI_HASH_KEY_{
-    char *section_name;
-    char *key_name;
+    const char *section_name;
+    const char *key_name;
 } INI_Hash_Key;
  
 struct INI_Context_ {
-    HASH(INI_Hash_Key*, char*) hashtable; 
+    HASH(INI_Hash_Key*, const char*) hashtable; 
 };
 
 #define LIBINI
 #include "ini.h"
 
-size_t ini_generate_hash_val(INI_Hash_Key **key);
+static size_t ini_generate_hash_val(const INI_Hash_Key **key);
 
 struct INI_Context_* ini_new_context(void) {
     struct INI_Context_ *new_context = malloc(sizeof(struct INI_Context_));
@@ -31,10 +32,10 @@ void ini_free_context(struct INI_Context_ *context) {
     free(context);
 }
 
-size_t ini_generate_hash_val(INI_Hash_Key **key) {
+static size_t ini_generate_hash_val(const INI_Hash_Key **key) {
     //Generating the hash val by multipling the ascii values of the strings.
-    size_t key_val = 0;
-    char *ptr = (*key)->section_name;
+    size_t key_val = 1;
+    const char *ptr = (*key)->section_name;
     while(*ptr != '\0') {
         key_val *= *ptr;
         ++ptr; 
@@ -47,9 +48,18 @@ size_t ini_generate_hash_val(INI_Hash_Key **key) {
     return (key_val);
 }
 
-CTL_BOOL key_comp(INI_Hash_Key **a, INI_Hash_Key **b) {
-    return (strcmp((*a)->section_name,(*b)->section_name) && 
-            strcmp((*a)->key_name,(*b)->key_name));
+static int key_comp(const INI_Hash_Key **a, const INI_Hash_Key **b) {
+    int retval;
+    retval = strcmp((*a)->section_name,(*b)->section_name);
+    if(retval == 0) retval = strcmp((*a)->key_name,(*b)->key_name);
+    return retval;
+}
+
+static CTL_BOOL is_blank_line(const char *s) {
+    for(; *s != '\0'; ++s) {
+        if(!isspace(*s)) return FALSE;
+    }
+    return TRUE;
 }
 
 int ini_load_config_fp(struct INI_Context_ *ini, FILE *fp) {
@@ -62,7 +72,7 @@ int ini_load_config_fp(struct INI_Context_ *ini, FILE *fp) {
         fgets(s, sizeof(s), fp);
         if(feof(fp)) break;
 
-        if(s[0] == '#' || s[0] == ';') {
+        if(s[0] == '#' || s[0] == ';' || is_blank_line(s)) {
 
             // Comment, ignoring
 
@@ -81,7 +91,7 @@ int ini_load_config_fp(struct INI_Context_ *ini, FILE *fp) {
             // New entry
             char name[1024];
             char value[1024];
-            char* val;
+            char *val, *key;
             INI_Hash_Key *new_key = 0;
             ini_split_var_value(s, name, sizeof(name), value, sizeof(value));
 
@@ -90,8 +100,8 @@ int ini_load_config_fp(struct INI_Context_ *ini, FILE *fp) {
 
             new_key = malloc(sizeof(INI_Hash_Key));
             new_key->section_name = section_name;
-            new_key->key_name = malloc(strlen(name) + 1);
-            strcpy(new_key->key_name, name);
+            new_key->key_name = key = malloc(strlen(name) + 1);
+            strcpy(key, name);
             val = malloc(strlen(value) + 1);
             strcpy(val, value);
             HASH_INSERT(ini->hashtable, new_key, val); 
@@ -112,25 +122,20 @@ int ini_load_config_file(struct INI_Context_ * ini, const char *filename) {
 }
 
 const char *ini_get_value(
-    struct INI_Context_ * ini,
+    const struct INI_Context_ * ini,
     const char *section,
     const char *var) {
-    //This function is a glorified hash look up; we just put section and 
-    //var in a new key and get the value.
-    INI_Hash_Key* key = malloc(sizeof(INI_Hash_Key));
-    HASH_ELEMENT(INI_Hash_Key* , char*) result;
-    //We do these string copies cause we would otherwise be passing const 
-    //parameters to a function in which they would not be const.
-    key->section_name = malloc(strlen(section) + 1);
-    strcpy(key->section_name, section);
-    key->key_name = malloc(strlen(var) + 1);
-    strcpy(key->key_name, var);
 
-    if(!HASH_FIND(ini->hashtable, key, key_comp, result)) {
-        free(key);
+    INI_Hash_Key key, *pkey;
+    HASH_ELEMENT(INI_Hash_Key* , const char*) result;
+
+    key.section_name = section;
+    key.key_name = var;
+    pkey = &key;
+
+    if(!HASH_FIND(ini->hashtable, pkey, key_comp, result)) {
         return NULL;
     } else {
-        free(key);
         return result.value;
     }
 }
