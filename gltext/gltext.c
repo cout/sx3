@@ -496,11 +496,10 @@ void gltTextureChar(gltContext *g, unsigned char c) {
             g->y += g->font_y;
             break;
         default:
+            glPushAttrib(GL_TEXTURE_BIT);
             glBindTexture(GL_TEXTURE_2D, g->texture_font);
             glEnable(GL_TEXTURE_2D);
             glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-
             glBegin(GL_QUADS);
             glTexCoord2f(1.0/256.0 * c, 0.0);
             glVertex2f(g->x, g->y);                         // upper left
@@ -511,6 +510,7 @@ void gltTextureChar(gltContext *g, unsigned char c) {
             glTexCoord2f(1.0/256.0 * (c + 1), 0.0);
             glVertex2f(g->x + g->font_x, g->y);             // upper right
             glEnd();
+            glPopAttrib();
 
             g->x += g->font_x;
     }
