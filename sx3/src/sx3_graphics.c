@@ -17,6 +17,7 @@
 #include "sx3_console.h"
 #include "sx3_tanks.h"
 #include "sx3_weapons.h"
+#include "sx3_math.h"
 
 // FIX ME!! Is this the proper place for this?
 static int shield_list;
