@@ -483,11 +483,13 @@ void gltBitmapString(gltContext* g, const unsigned char* s) {
 // ---------------------------------------------------------------------------
 
 void gltLoadTextureFont(gltContext *g, const char *filename) {
+    // TODO: Need to free the old texture before loading
+    // a new one.
     g->texture_font = bind_tex(filename, 0);
 }
 
 void gltTextureChar(gltContext *g, unsigned char c) {
-    if(!g->texture_font);
+    if(!g->texture_font) return;
 
     switch(c) {
         case '\0':
