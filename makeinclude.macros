@@ -152,6 +152,8 @@ $(RECURSE_RULES): %: recurse_%
 # Make rule recurse_foo depend on recurse_foo_dir1, recurse_foo_dir2, etc.
 $(RECURSE_RECURSE_RULES): %: $(foreach dir, $(SX3_DIRS), %.$(dir))
 
+# Some helper functions for combining and extracting rules and directories
+rule_plus_dir = $(strip $(1)).$(strip $(2))
 recurse_dirof = $(subst .,,$(suffix $(1)))
 recurse_ruleof = $(subst default,install,$(subst recurse_,,$(basename $(1))))
 
@@ -159,7 +161,7 @@ recurse_ruleof = $(subst default,install,$(subst recurse_,,$(basename $(1))))
 # Note that there is a special case for the default rule, which executes
 # make -C dir install instead.
 $(foreach dir, $(SX3_DIRS), $(foreach rule, $(RECURSE_RECURSE_RULES), \
-		$(rule).$(dir))):
+		$(call rule_plus_dir, $(rule), $(dir)))):
 	$(MAKE) -C $(call recurse_dirof, $@) $(call recurse_ruleof, $@)
 
 .PHONY: $(RECURSE_RULES)
