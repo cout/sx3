@@ -320,6 +320,8 @@ void init(const char *modelfile, const char *weaponfile, const char *skinfile) {
 // SDL doesn't use callbacks, so we must check the events ourselves
 void main_loop() {
     SDL_Event event;
+    SDL_Event prev_event;
+    int retval;
 
     for(;;) {
         // We can wait on an event (as we are doing here), or we can poll for
@@ -334,6 +336,16 @@ void main_loop() {
                     event.button.x, event.button.y);
                 break;
             case SDL_MOUSEMOTION:
+                // This is a hack to keep the motion from being so jumpy on
+                // slow cards
+                do {
+                    prev_event = event;
+                    retval = SDL_PollEvent(&event);
+                } while(retval != 0 && event.type == SDL_MOUSEMOTION);
+                if(retval != 0) {
+                    SDL_PushEvent(&event);
+                    event = prev_event;
+                }
                 mouse_motion(event.motion.state,
                     event.motion.x, event.motion.y);
                 break;
