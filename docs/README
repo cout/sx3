@@ -1,0 +1,10 @@
+Makefile
+--------
+If you don't want to make each directory separately, just use this Makefile.
+Either copy it to the top-level Sx3 directory, or create a symlink.  Then
+cd to the top-level Sx3 directory and just type "make".
+
+cvswrappers
+-----------
+CVS doesn't work to well with binary files.  To keep from accidentally checking
+a binary file in using ascii mode, please copy cvswrappers to ~/.cvswrappers.
