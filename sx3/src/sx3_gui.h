@@ -26,8 +26,9 @@ enum sx3_font_types {
 // FUnction declarations
 // ===========================================================================
 
-SX3_ERROR_CODE sx3_display_text(int x, int y, char* s, enum sx3_font_types font);
-SX3_ERROR_CODE sx3_draw_text(int x, int y, char* s, enum sx3_font_types font);
+void sx3_move_text_cursor(int x, int y);
+SX3_ERROR_CODE sx3_display_text(char* s, enum sx3_font_types font);
+SX3_ERROR_CODE sx3_draw_text(char* s, enum sx3_font_types font);
 void sx3_draw_hud(float dt);
 void sx3_init_gui();
 void sx3_close_gui();

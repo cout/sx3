@@ -218,9 +218,10 @@ SX3_ERROR_CODE sx3_console_refresh_display(void)
     // Print the current line
     glColor3ub (255, 255, 255);
     glLineWidth (1.0);
-    print_console_text (10, (window_size.y/2-8), ">");
-    print_console_text (30, (window_size.y/2-8), current_line);
-    print_console_text (strlen(current_line)*10+30, (window_size.y/2-8), "_");
+    sx3_move_text_cursor(10, (window_size.y/2-8) - 15);
+    sx3_draw_text("> ", SX3_DEFAULT_FONT);
+    sx3_draw_text(current_line, SX3_DEFAULT_FONT);
+    sx3_draw_text("_", SX3_DEFAULT_FONT);
 
     // Print the history, starting with the last line
     for (i = history_num_lines - 1; i >= 0; i--)
@@ -229,7 +230,8 @@ SX3_ERROR_CODE sx3_console_refresh_display(void)
         print_y = (window_size.y/2-8) - (history_num_lines-i)*LINE_HEIGHT;
         if (print_y < 20) break;
 
-        print_console_text (10, print_y, history_data[line_index]);
+        sx3_move_text_cursor(10, print_y - 15);
+        sx3_draw_text(history_data[line_index], SX3_DEFAULT_FONT);
     }
 
     // Restore the PROJECTION matrix
@@ -385,31 +387,6 @@ SX3_ERROR_CODE move_input_line_to_history(void)
 
     return SX3_ERROR_SUCCESS;
 } // move_input_line_to_history()
-
-
-// print_console_text
-//
-// Prints the specified line of text at the specified location.  
-// This function assumes that the PROJECTION matrix has been set up
-// orthogonally to the window size (ie: upper left=0 x 0, 
-// lower right=window_size.x x window_size.y).
-//
-// The current gl color is not saved.
-//
-// INPUT:   x - x coordinate at which to print
-//          y - y corrdinate at which to print
-//          s - string to print
-// OUTPUT:  none
-//
-// RETURN:  SX3_ERROR_SUCCESS
-SX3_ERROR_CODE print_console_text(int x, int y, char *s)
-{
-    // FIX ME!! I forget what the correct font parameter is.  We aren't
-    // using it, though.
-    sx3_draw_text(x, y-15, s, 0);
-
-    return SX3_ERROR_SUCCESS;    
-}  // print_console_text()
 
 
 // console_print
