@@ -21,9 +21,10 @@
 #include <math.h>
 #include <memory.h>
 #include "sx3_terrain.h"
-#include "sx3_global.h"
+#include <sx3_registry.h>
 #include "sx3_math.h"
 #include "sx3_gui.h"
+#include "sx3_global.h"
 
 
 // ===========================================================================
@@ -139,10 +140,84 @@ GLfloat terrain_diffuse[] =   {0.2F,1.0F,0.2F,0.5F};
 GLfloat terrain_specular[] =  {0.0F,0.0F,0.0F,0.5F};
 GLfloat terrain_shininess[] = {127.0};
 
+// Main terrain data structures -------------------------------------------
+struct IPoint       g_terrain_size;
+float               g_terrain_vertex_height [MAX_MAP_X*MAX_MAP_Y];
+struct Point        g_terrain_vertex_normal [MAX_MAP_X*MAX_MAP_Y];
+struct Point        g_terrain_triag_normal  [MAX_MAP_X*MAX_MAP_Y*2];
+long int            g_terrain_square_tile   [MAX_MAP_X*MAX_MAP_Y];
+
+// Terrain rendering options ----------------------------------------------
+int                 g_terrain_wire              = 0;
+int                 g_terrain_lights            = 1;
+int                 g_terrain_detail_levels     = 6;
+int                 g_terrain_detail_cutoff     = 4;
+int                 g_terrain_detail_skip       = 2;
+int                 g_terrain_detail_alg        = 0;
+
 
 // ===========================================================================
 // Function definitions
 // ===========================================================================
+
+
+// sx3_terrain_register_vars
+//
+// Registers global varaibles with the global module
+SX3_ERROR_CODE sx3_terrain_register_vars (void)
+{
+	sx3_add_global_var ("terrain.wire",
+						SX3_GLOBAL_BOOL,
+						0,
+						(void*)&g_terrain_wire,
+						0,
+						NULL);
+    sx3_add_global_var ("terrain.lights",
+                        SX3_GLOBAL_BOOL,
+                        0,
+                        (void*)&g_terrain_lights,
+                        0,
+                        NULL);
+    sx3_add_global_var ("terrain.detail.levels",
+                        SX3_GLOBAL_INT,
+                        0,
+                        (void*)&g_terrain_detail_levels,
+                        0,
+                        NULL);
+    sx3_add_global_var ("terrain.detail.cutoff",
+                        SX3_GLOBAL_INT,
+                        0, 
+                        (void*)&g_terrain_detail_cutoff,
+                        0,
+                        NULL);
+    sx3_add_global_var ("terrain.detail.skip",
+                        SX3_GLOBAL_INT,
+                        0,
+                        (void*)&g_terrain_detail_skip,
+                        0,
+                        NULL);
+    sx3_add_global_var ("terrain.detail.alg",
+                        SX3_GLOBAL_INT,
+                        0,
+                        (void*)&g_terrain_detail_alg,
+                        0,
+                        NULL);
+    sx3_add_global_var ("terrain.size.x",
+                        SX3_GLOBAL_INT,
+                        1,
+                        (void*)&g_terrain_size.x,
+                        0,
+                        NULL);
+    sx3_add_global_var ("terrain.size.y",
+                        SX3_GLOBAL_INT,
+                        1,
+                        (void*)&g_terrain_size.y,
+                        0,
+                        NULL);
+
+   return SX3_ERROR_SUCCESS; 
+}  // sx3_terrain_register_vars 
+
 
 // sx3_load_terrain
 //

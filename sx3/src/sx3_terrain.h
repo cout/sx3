@@ -107,6 +107,8 @@ float sx3_find_terrain_height(float x, float y);
 
 SX3_ERROR_CODE sx3_unload_terrain(void);
 
+SX3_ERROR_CODE sx3_terrain_register_vars(void);
+
 #ifdef __cplusplus
 }
 #endif
