@@ -1,0 +1,69 @@
+PREFIX=../local
+BINDIR  = $(PREFIX)/bin
+MANDIR  = $(PREFIX)/man
+LIBDIR  = $(PREFIX)/lib
+INCDIR  = $(PREFIX)/include
+SECTION = 1
+
+ifeq ($(COMSPEC),)
+	REALMAINOUT=$(MAINOUT)
+
+	SDL_LIBS=-lSDL_image
+	SDL_LDFLAGS=`sdl-config --libs`
+	SDL_CFLAGS=`sdl-config --cflags`
+
+	GL_LIBS=-lGL -lGLU
+	GL_LDFLAGS=
+	GL_CFLAGS=
+
+	LDFLAGS+=-L/usr/local/lib -L/usr/X11R6/lib
+else
+	REALMAINOUT=$(addsuffix exe,$(MAINOUT))
+
+	SDL_LIBS=-lSDL -lSDL_image
+	SDL_LDFLAGS=
+	SDL_CFLAGS=
+
+	GL_LIBS=-lopengl32 -lglu32
+	GL_LDFLAGS=
+	GL_CFLAGS=
+	
+endif
+
+LDFLAGS+=-L$(PREFIX)/lib
+INCLUDES+=-I$(PREFIX)/include
+
+CC=gcc
+AR=ar
+
+.SUFFIXES: .c
+
+default: $(OUT)
+
+include .Makefile.d
+
+.Makefile.d: depend
+
+.c.o:
+	$(CC) $(INCLUDES) $(CFLAGS) -c $< -o $@
+
+$(REALMAINOUT): $(MAINOBJ) $(LIBOUT)
+	$(CC) $(MAINOBJ) $(LDFLAGS) $(LIBS) -o $(REALMAINOUT)
+
+$(LIBOUT): $(LIBOBJ)
+	$(AR) rc $@ $?
+
+libinstall:
+	mkdir -p $(LIBDIR)
+	cp $(LIBOUT) $(LIBDIR)
+	mkdir -p $(INCDIR)
+	cp $(HEADERS) $(INCDIR)
+
+depend: dep
+
+dep:
+	gcc -M $(CFLAGS) $(INCLUDES) $(SRC) > .Makefile.d
+
+clean:
+	rm -f $(OBJ) $(OUT) core
+
