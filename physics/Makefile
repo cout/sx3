@@ -12,13 +12,7 @@ OUT=$(REALMAINOUT) $(LIBOUT)
 
 HEADERS=pglobal.h physics.h
 
-INCLUDES=-I. -I../local/include
-
-CFLAGS=-g -Wall
-CCFLAGS=$(CFLAGS)
-
-LIBS=-lm
-LDFLAGS=
+LIBS+=-lm
 
 include ../makeinclude.macros
 

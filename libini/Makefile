@@ -12,12 +12,5 @@ OUT=$(REALMAINOUT) $(LIBOUT)
 
 HEADERS=ini.h
 
-INCLUDES=-I. -I../local/include
-
-CFLAGS=-g -Wall
-
-LIBS=
-LDFLAGS=
-
 include ../makeinclude.macros
 

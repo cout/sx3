@@ -20,9 +20,5 @@ OUT=$(LIBOUT)
 
 HEADERS=pfile.h
 
-CFLAGS=-g -Wall
-LIBS=
-LDFLAGS=
-
 include ../makeinclude.macros
 

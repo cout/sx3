@@ -10,7 +10,7 @@ SRC=$(MAINSRC)
 OBJ=$(MAINOBJ)
 OUT=$(REALMAINOUT)
 
-CFLAGS+=-g -O3 -Wall $(GL_CFLAGS) $(SDL_CFLAGS)
+CFLAGS+=$(GL_CFLAGS) $(SDL_CFLAGS)
 LDFLAGS+=$(GL_LDFLAGS) $(SDL_LDFLAGS)
 LIBS+=  \
 	-lm -lgfx -lphysics -lini -lgltext -lsx3_utils -lsx3_console \

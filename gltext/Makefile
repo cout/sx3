@@ -17,7 +17,7 @@ HEADERS=gltext.h
 
 INCLUDES+=-I. -I../local/include
 
-CFLAGS+=-g -Wall $(GL_CFLAGS) $(SDL_CFLAGS)
+CFLAGS+=$(GL_CFLAGS) $(SDL_CFLAGS)
 LIBS+=-lm -lgfx $(GL_LIBS) $(SDL_LIBS)
 LDFLAGS+=$(GL_LDFLAGS) $(SDL_LDFLAGS)
 

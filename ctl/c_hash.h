@@ -77,11 +77,11 @@
     HASH_TYPE_CHECK(h); \
     ctl__hash_free((CTL__Hash *)&h); \
 }
-#define HASH_INSERT(h, key, value) { \
+#define HASH_INSERT(h, k, v) { \
     HASH_TYPE_CHECK(h); \
-    ASSERT_SAME_TYPE(h.key, key); \
-    ASSERT_SAME_TYPE(h.value, value); \
-    ctl__hash_insert((CTL__Hash *)&h, &key, &value); \
+    ASSERT_SAME_TYPE(h.data->data->key, k); \
+    ASSERT_SAME_TYPE(h.data->data->value, v); \
+    ctl__hash_insert((CTL__Hash *)&h, &k, &v); \
 }
 #define HASH_FIND(h, key, comp, result) ( \
     HASH_PARTIAL_TYPE_CHECK(h), \

@@ -12,13 +12,7 @@ OUT=$(REALMAINOUT) $(LIBOUT)
 
 HEADERS=sx3_registry.h sx3_utils.h
 
-INCLUDES=-I. -I../local/include
-
-CFLAGS=-g -Wall
-CCFLAGS=$(CFLAGS)
-
-LIBS=-lm
-LDFLAGS=
+LIBS+=-lm
 
 include ../makeinclude.macros
 

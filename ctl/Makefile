@@ -6,11 +6,9 @@ HEADERS= \
 	c_hash.h \
 	c_hash.i \
 	c_types.h \
-	c_util.h
+	c_util.h \
+	ctl_config.h
 SRC=$(wildcard *_test.c)
-
-CFLAGS=-g -Wall
-CCFLAGS=$(CFLAGS)
 
 all: dynarray_test itor_test hash_test
 

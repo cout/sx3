@@ -12,11 +12,7 @@ OUT=$(REALMAINOUT) $(LIBOUT)
 
 HEADERS=sx3_console.h sx3_console_commands.h
 
-CFLAGS=-g -Wall
-CCFLAGS=$(CFLAGS)
-
-LIBS=-lm
-LDFLAGS=
+LIBS+=-lm
 
 include ../makeinclude.macros
 

@@ -62,6 +62,7 @@ endif
 
 LDFLAGS+=-L$(PREFIX)/lib
 INCLUDES+=-I$(PREFIX)/include
+CFLAGS+=-DDEBUG -Wall -O3
 
 CC=gcc
 AR=ar
@@ -99,7 +100,7 @@ $(LIBOUT): $(LIBOBJ)
 
 depend: dep
 
-dep: makedepend
+dep: depclean makedepend
 
 makedepend:
 	$(if $(SRC), \
@@ -108,9 +109,11 @@ makedepend:
 
 clean:
 	rm -f $(OBJ) $(OUT) core
+
+depclean:
 	rm -f $(DEPENDENCY_FILE)
 
-.PHONY: default depend dep makedepend clean
+.PHONY: default depend dep makedepend clean depclean
 
 # -----------------------------------------------------------------------------
 # Install rules
