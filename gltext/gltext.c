@@ -3,8 +3,6 @@
  */
 
 #include <stdlib.h>
-#include <GL/glut.h>
-#include <GL/glx.h>
 #include <textures.h>
 #include "gltext.h"
 
@@ -179,6 +177,7 @@ static const float verts[][2] = {
 };
 
 #ifdef WIN32
+#if 0
     static  PIXELFORMATDESCRIPTOR pfd =    
         sizeof(PIXELFORMATDESCRIPTOR),      // Size of this structure
         1,                                  // Version Number
@@ -200,6 +199,7 @@ static const float verts[][2] = {
         0, 0, 0                             // Layer Masks Ignored
     };
 #endif
+#endif
 
 // ---------------------------------------------------------------------------
 // Initialization
@@ -210,6 +210,7 @@ static void init_bitmap_font(gltContext *g, int font) {
 
     g->font_lists[font] = glGenLists(128);
 #ifdef WIN32
+#if 0
     switch(font) {
         case GLT_HELVETICA: fontname = "Arial";    break;
         case GLT_TIMES:     fontname = "Times";    break;
@@ -233,6 +234,7 @@ static void init_bitmap_font(gltContext *g, int font) {
         fontname);
     selectObject(g->hDC, font);
     wglUseFontBitmaps(g->hDC, 0, 127, g->font_lists[font]);
+#endif
 #else
     switch(font) {
         case GLT_HELVETICA:
@@ -269,6 +271,7 @@ static void close_glt() {
 
 static int init_glt(gltContext *g) {
 #ifdef WIN32
+#if 0
     /*
     g->hInstance = GetModuleHandle(NULL);
     // TODO: We must register a wc before we can create a window.  This
@@ -295,6 +298,7 @@ static int init_glt(gltContext *g) {
     INIT_ERROR_CHECK(g->hRC = wglCreateContext(g->hDC));
     INIT_ERROR_CHECK(wglMakeCurrent(g->hDC, g->hRC));
     */
+#endif
 #else
     g->display = (Display*)glXGetCurrentDisplay();
     INIT_ERROR_CHECK(g->display);
