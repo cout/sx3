@@ -18,6 +18,6 @@ CFLAGS=-g -Wall $(GL_CFLAGS) $(SDL_CFLAGS)
 LIBS=-lm $(GL_LIBS) $(SDL_LIBS)
 LDFLAGS=$(GL_LDFLAGS) $(SDL_LDFLAGS)
 
-include ../build/makeinclude.macros
+include ../makeinclude.macros
 
 install: libinstall

@@ -19,6 +19,6 @@ CFLAGS=-g -Wall
 LIBS=
 LDFLAGS=
 
-include ../build/makeinclude.macros
+include ../makeinclude.macros
 
 install: libinstall
