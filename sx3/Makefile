@@ -1,5 +1,3 @@
-all:
-	make -C src
+SX3_DIRS=src
+include ../makeinclude.macros
 
-clean:
-	make -C src clean

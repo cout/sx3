@@ -26,9 +26,9 @@ typedef enum {
 
     
 /* FUNCTION DECLARATIONS *****************************************************/
-int                 sx3_console_process_input	(const char in_char);
+int                 sx3_console_process_input	  (const char in_char);
 CONSOLE_ERROR_CODE  sx3_console_refresh_display	(void);
-CONSOLE_ERROR_CODE  sx3_console_print			(const char *line);
+CONSOLE_ERROR_CODE  sx3_console_print			      (const char *line);
 void                sx3_console_register_vars   (void);
 CONSOLE_ERROR_CODE  sx3_console_init            (const char *fontname);
 

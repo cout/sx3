@@ -1,4 +1,4 @@
-// File: sx3_misc.c
+// File: sx3_utils.c
 // Author: Paul Brannan
 //
 

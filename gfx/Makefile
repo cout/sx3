@@ -22,4 +22,3 @@ LDFLAGS+=$(GL_LDFLAGS) $(SDL_LDFLAGS)
 
 include ../makeinclude.macros
 
-install: libinstall

@@ -21,4 +21,3 @@ LDFLAGS=
 
 include ../makeinclude.macros
 
-install: libinstall

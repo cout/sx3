@@ -1,4 +1,6 @@
 all:
 
-install:
-	cp matrix.h ../local/include
+HEADERS=matrix.h
+
+include ../makeinclude.macros
+

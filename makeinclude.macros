@@ -1,4 +1,8 @@
-DEFAULT_PREFIX  = ../local
+# -----------------------------------------------------------------------------
+# Destination files and directories
+# -----------------------------------------------------------------------------
+
+DEFAULT_PREFIX  = $(SX3_ROOT)/local
 DEFAULT_BINDIR  = $(PREFIX)/bin
 DEFAULT_MANDIR  = $(PREFIX)/man
 DEFAULT_LIBDIR  = $(PREFIX)/lib
@@ -11,6 +15,12 @@ MANDIR=$(DEFAULT_MANDIR)
 LIBDIR=$(DEFAULT_LIBDIR)
 INCDIR=$(DEFAULT_INCDIR)
 SECTION=$(DEFAULT_SECTION)
+
+DEPENDENCY_FILE = .Makefile.d
+
+# -----------------------------------------------------------------------------
+# Libraries and definitions
+# -----------------------------------------------------------------------------
 
 ifneq ($(ComSpec),)
 	COMSPEC=$ComSpec
@@ -31,6 +41,8 @@ ifeq ($(COMSPEC),)
 
 	MKDIR_START=mkdir -p
 	MKDIR=
+
+  INSTALL=install -p
 else
 	REALMAINOUT=$(addsuffix .exe,$(MAINOUT))
 
@@ -44,6 +56,8 @@ else
 
 	MKDIR_START=if not exist
 	MKDIR=mkdir
+
+  INSTALL=install -p
 endif
 
 LDFLAGS+=-L$(PREFIX)/lib
@@ -54,11 +68,25 @@ AR=ar
 
 .SUFFIXES: .c
 
+# -----------------------------------------------------------------------------
+# Sx3 root directory calculation
+# Set SX3_ROOT in your environment if this is not done correctly.
+# -----------------------------------------------------------------------------
+
+CVS_REPOSITORY?=$(shell cat CVS/Repository)
+SX3_ROOT?=$(subst $(CVS_REPOSITORY),,$(CURDIR))sx3
+
+# -----------------------------------------------------------------------------
+# Build rules
+# -----------------------------------------------------------------------------
+
 default: $(OUT)
 
-include .Makefile.d
+include $(DEPENDENCY_FILE)
 
-.Makefile.d: depend
+Makefile: $(DEPENDENCY_FILE)
+
+$(DEPENDENCY_FILE): makedepend
 
 .c.o:
 	$(CC) $(INCLUDES) $(CFLAGS) -c $< -o $@
@@ -69,19 +97,65 @@ $(REALMAINOUT): $(MAINOBJ) $(LIBOUT)
 $(LIBOUT): $(LIBOBJ)
 	$(AR) rc $@ $?
 
-libinstall: headerinstall
-	$(MKDIR_START) $(LIBDIR) $(MKDIR) $(LIBDIR)
-	cp $(LIBOUT) $(LIBDIR)
-
-headerinstall:
-	$(MKDIR_START) $(INCDIR) $(MKDIR) $(INCDIR)
-	cp $(HEADERS) $(INCDIR)
-
 depend: dep
 
-dep:
-	gcc -M $(CFLAGS) $(INCLUDES) $(SRC) > .Makefile.d
+dep: makedepend
+
+makedepend:
+	$(if $(SRC), \
+		gcc -M $(CFLAGS) $(INCLUDES) $(SRC) > $(DEPENDENCY_FILE), \
+		touch $(DEPENDENCY_FILE))
 
 clean:
 	rm -f $(OBJ) $(OUT) core
+	rm -f $(DEPENDENCY_FILE)
+
+.PHONY: default depend dep makedepend clean
+
+# -----------------------------------------------------------------------------
+# Install rules
+# -----------------------------------------------------------------------------
+
+libinstall:
+	$(if $(LIBOUT), \
+		$(MKDIR_START) $(LIBDIR) $(MKDIR) $(LIBDIR); \
+		$(INSTALL) $(LIBOUT) $(LIBDIR))
+
+headerinstall:
+	$(if $(HEADERS), \
+		$(MKDIR_START) $(INCDIR) $(MKDIR) $(INCDIR); \
+		$(INSTALL) $(HEADERS) $(INCDIR))
+
+install: libinstall headerinstall
+
+.PHONY: install libinstall headerinstall
+
+# -----------------------------------------------------------------------------
+# Recursive rules
+# -----------------------------------------------------------------------------
+
+recurse_default:
+	$(foreach proj, $(SX3_DIRS), \
+		$(MAKE) -C $(proj) ; \
+		$(MAKE) -C $(proj) install &&) true
+
+recurse_install:
+	$(foreach proj, $(SX3_DIRS), $(MAKE) -C $(proj) install &&) true
+
+recurse_clean:
+	$(foreach proj, $(SX3_DIRS), $(MAKE) -C $(proj) clean &&) true
+
+recurse_dep:
+	$(foreach proj, $(SX3_DIRS), $(MAKE) -C $(proj) dep &&) true
+
+default: recurse_default
+
+install: recurse_install
+
+clean: recurse_clean
+
+dep: recurse_dep
+
+.PHONY: default install clean dep
+.PHONY: recurse_default recurse_install recurse_clean recurse_dep
 
