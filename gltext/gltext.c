@@ -5,7 +5,12 @@
 #include <stdlib.h>
 #include <GL/glut.h>
 #include <GL/glx.h>
+#include <textures.h>
 #include "gltext.h"
+
+// ---------------------------------------------------------------------------
+// Global data and macros
+// ---------------------------------------------------------------------------
 
 #define GLT_END        -1
 #define GLT_DOT        -2
@@ -196,6 +201,10 @@ static const float verts[][2] = {
     };
 #endif
 
+// ---------------------------------------------------------------------------
+// Initialization
+// ---------------------------------------------------------------------------
+
 static void init_bitmap_font(gltContext *g, int font) {
     char * fontname;
 
@@ -312,7 +321,8 @@ gltContext* gltNewContext() {
     g->x = 0;
     g->y = 0;
     g->in_draw = 0;
-    g->current_font = GLT_NONE;
+    g->current_bitmap_font = GLT_NONE;
+    g->texture_font = 0;
 
     return g;
 }
@@ -326,6 +336,10 @@ void gltFreeContext(gltContext *g) {
 
     if(g) free(g);
 }
+
+// ---------------------------------------------------------------------------
+// Wireframe fonts
+// ---------------------------------------------------------------------------
 
 void gltWireChar(gltContext *g, unsigned char c) {
     const int *i;
@@ -384,8 +398,12 @@ void gltWireString(gltContext *g, const unsigned char *s) {
     g->in_draw = 0;
 }
 
-void gltSelectFont(gltContext* g, int font) {
-    g->current_font = font;
+// ---------------------------------------------------------------------------
+// Bitmap fonts
+// ---------------------------------------------------------------------------
+
+void gltSelectBitmapFont(gltContext* g, int font) {
+    g->current_bitmap_font = font;
 }
 
 static void update_coords(gltContext *g) {
@@ -420,7 +438,7 @@ void gltBitmapChar(gltContext *g, unsigned char c) {
             break;
         default:
             glRasterPos2f(g->x, g->y + BITMAP_CELL_HEIGHT);
-            glCallList(g->font_lists[g->current_font]+c);
+            glCallList(g->font_lists[g->current_bitmap_font]+c);
             update_coords(g);
     }
 }
@@ -437,7 +455,7 @@ static const unsigned char* strfind(const unsigned char *s,
 void gltBitmapList(gltContext* g, const unsigned char* s, int n) {
     if (n > 0) {
         glRasterPos2f(g->x, g->y + BITMAP_CELL_HEIGHT);
-        glListBase(g->font_lists[g->current_font]);
+        glListBase(g->font_lists[g->current_bitmap_font]);
         glCallLists(n, GL_UNSIGNED_BYTE, s);
         update_coords(g);
     }
@@ -456,7 +474,58 @@ void gltBitmapString(gltContext* g, const unsigned char* s) {
     gltBitmapList(g, s, strlen(s));
 }
 
+// ---------------------------------------------------------------------------
+// Textured fonts
+// ---------------------------------------------------------------------------
+
+void gltLoadTextureFont(gltContext *g, const char *filename) {
+    g->texture_font = bind_tex(filename, 0);
+}
+
+void gltTextureChar(gltContext *g, unsigned char c) {
+    if(!g->texture_font);
+
+    switch(c) {
+        case '\0':
+            break;
+        case '\r':
+            g->x = 0.0;
+            break;
+        case '\n':
+            g->x = 0.0;
+            g->y += g->font_y;
+            break;
+        default:
+            glPushAttrib(GL_TEXTURE_BIT);
+            glBindTexture(GL_TEXTURE_2D, g->texture_font);
+            glEnable(GL_TEXTURE_2D);
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+            glBegin(GL_QUADS);
+            glTexCoord2f(1.0/256.0 * c, 0.0);
+            glVertex2f(g->x, g->y);                         // upper left
+            glTexCoord2f(1.0/256.0 * c, 1.0);
+            glVertex2f(g->x, g->y + g->font_y);             // lower left
+            glTexCoord2f(1.0/256.0 * (c + 0.99), 1.0);
+            glVertex2f(g->x + g->font_x, g->y + g->font_y); // lower right
+            glTexCoord2f(1.0/256.0 * (c + 0.99), 0.0);
+            glVertex2f(g->x + g->font_x, g->y);             // upper right
+            glEnd();
+            glPopAttrib();
+
+            g->x += g->font_x;
+    }
+}
+
+void gltTextureString(gltContext *g, const unsigned char *s) {
+    for(; *s != 0; ++s) gltTextureChar(g, *s);
+}
+
+// ---------------------------------------------------------------------------
+// Miscellaneous functions
+// ---------------------------------------------------------------------------
+
 void gltFontSize(gltContext* g, float x, float y) {
     g->font_x = x;
     g->font_y = y;
 }
+

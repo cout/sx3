@@ -217,7 +217,9 @@ SX3_ERROR_CODE sx3_console_refresh_display(void)
     
     // Print the current line
     glColor3ub (255, 255, 255);
-    glLineWidth (1.0);
+    // glColor3ub (0, 0, 0);
+    // glLineWidth (1.0);
+    glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
     sx3_move_text_cursor(10, (window_size.y/2-8) - 15);
     sx3_draw_text("> ", SX3_DEFAULT_FONT);
     sx3_draw_text(current_line, SX3_DEFAULT_FONT);

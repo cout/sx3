@@ -34,8 +34,9 @@ static gltContext *glt_context;
 void sx3_init_gui()
 {
     glt_context = gltNewContext();
-    gltSelectFont(glt_context, GLT_FIXED);
-    gltFontSize(glt_context, 10, 10);
+    gltSelectBitmapFont(glt_context, GLT_FIXED);
+    gltFontSize(glt_context, 8, 16);
+    gltLoadTextureFont(glt_context, SX3_DEFAULT_FONT_FILE);
 }
 
 void sx3_close_gui()
@@ -54,8 +55,11 @@ SX3_ERROR_CODE sx3_draw_text(char* s, enum sx3_font_types font)
 {
     glPushMatrix();
     glLoadIdentity();
-    gltWireString(glt_context, s);
+    // gltWireString(glt_context, s);
     // gltBitmapString(glt_context, s);
+    glAlphaFunc(GL_GEQUAL, 0.0625);
+    glEnable(GL_ALPHA_TEST);
+    gltTextureString(glt_context, s);
     glPopMatrix();
 
     return SX3_ERROR_SUCCESS;    
