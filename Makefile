@@ -1,7 +1,7 @@
 # Top-level Makefile for sx3
 # There must be a better way to do this!
 
-all: gfx_ gltext_ matrix_ physics_ ini_ sx3_
+all: gfx_ gltext_ matrix_ physics_ ini_ sx3_ ctl_
 
 gfx_:
 	make -C gfx
@@ -24,6 +24,10 @@ sx3_:
 ini_:
 	make -C libini
 	make -C libini install
+
+ctl_:
+	make -C ctl
+	make -C ctl install
 
 clean:
 	make -C gfx clean
