@@ -61,19 +61,21 @@ static void texture_text() {
     int j;
 
 	gltContext *g = gltNewContext();
-    gltLoadTextureFont(g, "font.png");
+    gltLoadTextureFont(g, "font2.png");
 
-	// glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClearColor(0, 0.3, 0, 0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluOrtho2D(0, WIDTH, HEIGHT, 0);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gltFontSize(g, 10, 10);
+	gltFontSize(g, 16, 16);
     glAlphaFunc(GL_GEQUAL, 0.0625);
     glEnable(GL_ALPHA_TEST);
 
 
+    // glColor3f(0.2, 0, 0.2);
 	for(j = 0; j < 128; j++) {
 		gltTextureChar(g, j);
 		if(j % 40 == 19) gltTextureString(g, "\r\n");

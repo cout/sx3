@@ -500,14 +500,17 @@ void gltTextureChar(gltContext *g, unsigned char c) {
             glBindTexture(GL_TEXTURE_2D, g->texture_font);
             glEnable(GL_TEXTURE_2D);
             glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
             glBegin(GL_QUADS);
             glTexCoord2f(1.0/256.0 * c, 0.0);
             glVertex2f(g->x, g->y);                         // upper left
             glTexCoord2f(1.0/256.0 * c, 1.0);
             glVertex2f(g->x, g->y + g->font_y);             // lower left
-            glTexCoord2f(1.0/256.0 * (c + 0.99), 1.0);
+            glTexCoord2f(1.0/256.0 * (c + 1.0), 1.0);
             glVertex2f(g->x + g->font_x, g->y + g->font_y); // lower right
-            glTexCoord2f(1.0/256.0 * (c + 0.99), 0.0);
+            glTexCoord2f(1.0/256.0 * (c + 1.0), 0.0);
             glVertex2f(g->x + g->font_x, g->y);             // upper right
             glEnd();
             glPopAttrib();
