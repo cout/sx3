@@ -34,6 +34,7 @@ Med priority:
 - Write code for an options menu and store menu.
 - Allow the tanks to move around on the terrain.
 - Use different viewpoints than what we currently have (which is klunky).
+- Global module: use a constant to represent read only status.
 
 Low priority:
 - Make terrain detail dependant on the distance the mouse moved.
