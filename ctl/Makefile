@@ -16,8 +16,12 @@ all: dynarray_test itor_test hash_test
 
 %_test: %_test.c
 
-install: libinstall
+foo:
+	echo $(DEFAULT_INCDIR)
+	echo $(INCDIR)
 
 include ../makeinclude.macros
 
-INCDIR=$(DEFAULT_INCDIR)/ctl
+install: headerinstall
+
+INCDIR=$(addsuffix /ctl, $(DEFAULT_INCDIR))
