@@ -18,8 +18,11 @@
 #include <math.h>
 #include <string.h>
 #include <ini.h>
+#include <sx3_console.h>
+#include "sx3_terrain.h"
 #include "sx3_misc.h"
 #include "sx3_global.h"
+#include <sx3_registry.h>
 #include "sx3_tanks.h"
 #include "sx3_title.h"
 #include "sx3_math.h"
@@ -43,27 +46,58 @@ struct Video_Mode {
     int bpp;
 };
 
-const struct Video_Mode video_modes[] = {
-/*
-    { 8, 8, 8, 32, 1, 1024, 768, 24 },
-    { 8, 8, 8, 16, 1, 1024, 768, 24 },
-    { 8, 8, 8, 32, 1,  800, 600, 24 },
-    { 8, 8, 8, 16, 1,  800, 600, 24 },
-    { 8, 8, 8, 32, 1,  640, 480, 24 },
-    { 8, 8, 8, 16, 1,  640, 480, 24 },
-*/
+static struct Video_Mode video_mode = {8, 8, 8, 16, 1, 640, 480, 24};
 
-/*
-    { 5, 6, 5, 32, 1, 1024, 768, 16 },
-    { 5, 6, 5, 16, 1, 1024, 768, 16 },
-    { 5, 6, 5, 32, 1,  800, 600, 16 },
-    { 5, 6, 5, 16, 1,  800, 600, 16 },
-*/
-    { 5, 6, 5, 32, 1,  640, 480, 16 },
-    { 5, 6, 5, 16, 1,  640, 480, 16 },
-
-    { 0, 0, 0,  0, 0,    0,   0,  0 }
-};
+void main_register_vars(void) {
+    sx3_add_global_var("video.red_size",
+                       SX3_GLOBAL_INT,
+                       1,
+                       &video_mode.red_size,
+                       0,
+                       NULL);
+    sx3_add_global_var("video.green_size",
+                       SX3_GLOBAL_INT,
+                       1,
+                       &video_mode.green_size,
+                       0,
+                       NULL);
+    sx3_add_global_var("video.blue_size",
+                       SX3_GLOBAL_INT,
+                       1,
+                       &video_mode.blue_size,
+                       0,
+                       NULL);
+    sx3_add_global_var("video.depth_size",
+                       SX3_GLOBAL_INT,
+                       1,
+                       &video_mode.depth_size,
+                       0,
+                       NULL);
+    sx3_add_global_var("video.double_buffer",
+                       SX3_GLOBAL_BOOL,
+                       1,
+                       &video_mode.depth_size,
+                       0,
+                       NULL);
+    sx3_add_global_var("video.size.x",
+                       SX3_GLOBAL_INT,
+                       1,
+                       &video_mode.width,
+                       0,
+                       NULL);
+    sx3_add_global_var("video.size.y",
+                       SX3_GLOBAL_INT,
+                       1,
+                       &video_mode.height,
+                       0,
+                       NULL);
+    sx3_add_global_var("video.bpp",
+                       SX3_GLOBAL_INT,
+                       1,
+                       &video_mode.bpp,
+                       0,
+                       NULL);
+}
 
 int try_gl_mode(int fullscreen, const struct Video_Mode *vid_mode)
 {
@@ -92,18 +126,16 @@ int try_gl_mode(int fullscreen, const struct Video_Mode *vid_mode)
 
 void set_gl_mode(int fullscreen)
 {
-    const struct Video_Mode *vid_mode = video_modes;
-
-    for(; vid_mode->bpp != 0; vid_mode++)
+    if(!try_gl_mode(fullscreen, &video_mode))
     {
-        if(try_gl_mode(fullscreen, vid_mode))
-        {
-            printf("Video mode OK\n");
-            return;
-        }
+        fprintf(stderr, "Unable set set GL mode\n");
+        exit(1);
     }
-    fprintf(stderr, "Unable set set GL mode\n");
-    exit(1);
+    else
+    {
+        printf("Video mode OK\n");
+        return;
+    }
 }
 
 #ifdef WIN32
@@ -135,6 +167,12 @@ int main(int argc, char *argv[])
             "EXITING...\n\n");
         return 1;
     }
+
+    // Initialize config vars
+    main_register_vars();
+    sx3_console_register_vars();
+    sx3_game_register_vars();
+    sx3_terrain_register_vars();
 
     // Read the config file; command-line arguments will override anything
     // in the config file.
