@@ -69,8 +69,13 @@ int ini_load_config_fp(INI_Context *ini, FILE *fp) {
         if(feof(fp)) break;
 
         if(s[0] == '[') {
+
             // New section
-            char *name = strtok(s+1, "] \t\r\n");
+            char *name = s+1, *ptr = s+1;
+            while(*ptr != '\r' && *ptr != '\n' && *ptr != ']' && *ptr != 0)
+                ++ptr;
+            *ptr = 0;
+
             if(!section) {
                 // First section
                 ini->first_section = malloc(sizeof(INI_Section));
@@ -82,13 +87,13 @@ int ini_load_config_fp(INI_Context *ini, FILE *fp) {
             section->first_entry = entry = NULL;
             section->next_section = NULL;
             section->name = strdup(name);
+
         } else {
+
             // New entry
-            char *ptr, *value;
-            char *name = strtok_r(s, " \t=", &ptr);
-            
-            for(; *ptr == ' ' || *ptr == '\t' || *ptr == '='; ++ptr) ;
-            value = strtok_r(ptr, " \t\r\n", &ptr);
+            char name[1024];
+            char value[1024];
+            ini_split_var_value(s, name, sizeof(name), value, sizeof(value));
 
             if(!section) continue;
             if(!entry) {
@@ -102,6 +107,7 @@ int ini_load_config_fp(INI_Context *ini, FILE *fp) {
             entry->next_entry = NULL;
             entry->name = strdup(name);
             entry->value = strdup(value);
+
         }
     }
 
@@ -141,3 +147,44 @@ const char *ini_get_value(
     return NULL;
 }
 
+void ini_split_var_value(
+    const char *string,
+    char *var, int var_len,
+    char *val, int val_len) {
+
+    // Grab the variable name
+    while(*string != '=' &&
+          *string != ' ' &&
+          *string != '\t' &&
+          *string != 0) {
+
+        *var++ = *string++;
+    }
+
+    // Null-terminate
+    *var = *val = 0;
+
+    // Check to see if we are at the end of the string
+    if(*string == 0) return;
+
+    // Find the beginning of the value
+    while(*string == '=' ||
+          *string == ' ' ||
+          *string == '\t') {
+        string++;
+    }
+
+    // Check to see if we are at the end of the string
+    if(*string == 0) return;
+
+    // Set the value
+    while(*string != '\r' &&
+          *string != '\n' &&
+          *string != '\0') {
+        *val++ = *string++;
+    }
+
+    // Null-terminate
+    *val = 0;
+}
+    
