@@ -68,7 +68,11 @@ int ini_load_config_fp(INI_Context *ini, FILE *fp) {
         fgets(s, sizeof(s), fp);
         if(feof(fp)) break;
 
-        if(s[0] == '[') {
+        if(s[0] == '#' || s[0] == ';') {
+
+            // Comment
+
+        } else if(s[0] == '[') {
 
             // New section
             char *name = s+1, *ptr = s+1;
