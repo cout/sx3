@@ -166,6 +166,7 @@ int main(int argc, char *argv[])
     set_gl_mode(fullscreen);
 
     // Set some other misc. options
+    SDL_WM_SetCaption("Sx3", NULL);
     SDL_EnableUNICODE(1);
     SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 
