@@ -160,11 +160,11 @@ void gl_settings() {
     }
 
     if(wireframe) {
-        glPolygonMode(GL_FRONT, GL_LINE);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glDisable(GL_CULL_FACE);
     }
     else {
-        glPolygonMode(GL_FRONT, GL_FILL);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glEnable(GL_CULL_FACE);
     }
 
@@ -279,17 +279,6 @@ void init(const char *modelfile, const char *weaponfile, const char *skinfile) {
     glShadeModel(GL_SMOOTH);
     glEnable(GL_SMOOTH);
     // glEnable(GL_POLYGON_SMOOTH);
-
-    // Only draw one side of the polygons -- note the use of GL_CW.  This
-    // is because MD2 models draw their polygins in clockwise order, instead
-    // of counter-clockwise order, as is the OpenGL default.  The new version
-    // of the MD2 library takes this into account, but the old version did
-    // not.
-    glPolygonMode(GL_FRONT, GL_FILL);
-    // glPolygonMode(GL_BACK, GL_LINE);
-    // glFrontFace(GL_CW);
-    glCullFace(GL_BACK);
-    glEnable(GL_CULL_FACE);
 
     // Create a light source.
     glLightfv(GL_LIGHT0, GL_AMBIENT, light0_ambient);
