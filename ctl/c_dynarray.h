@@ -17,18 +17,18 @@
   }
 
 #define DYNARRAY_TYPE_CHECK(da) { \
-    UNUSED_ARG(da.count); \
-    UNUSED_ARG(da.max); \
-    UNUSED_ARG(da.data_size); \
-    UNUSED_ARG(da.data); \
-    ASSERT_IS_TYPE_OF(da.count, size_t); \
-    ASSERT_IS_TYPE_OF(da.max, size_t); \
-    ASSERT_IS_TYPE_OF(da.data_size, size_t); \
-    ASSERT(sizeof(da) == sizeof(DYNARRAY(char))); \
+    CTL_UNUSED_ARG(da.count); \
+    CTL_UNUSED_ARG(da.max); \
+    CTL_UNUSED_ARG(da.data_size); \
+    CTL_UNUSED_ARG(da.data); \
+    CTL_ASSERT_IS_TYPE_OF(da.count, size_t); \
+    CTL_ASSERT_IS_TYPE_OF(da.max, size_t); \
+    CTL_ASSERT_IS_TYPE_OF(da.data_size, size_t); \
+    CTL_ASSERT(sizeof(da) == sizeof(DYNARRAY(char))); \
 }
 
 #define DYNARRAY_DATA_TYPE_CHECK(da, type) { \
-    ASSERT_IS_TYPE_OF(da.data, type*); \
+    CTL_ASSERT_IS_TYPE_OF(da.data, type*); \
 }
 
 #define DYNARRAY_IT(type)         type*
@@ -60,7 +60,7 @@
     type data = d; \
     DYNARRAY_TYPE_CHECK(da); \
     DYNARRAY_DATA_TYPE_CHECK(da, type); \
-    ASSERT_IS_TYPE_OF(d, type); \
+    CTL_ASSERT_IS_TYPE_OF(d, type); \
     ctl__da_push_back((CTL__Dynarray*)&da, &data); \
 }
 

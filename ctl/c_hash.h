@@ -30,27 +30,27 @@
     }
 
 #define HASH_PARTIAL_TYPE_CHECK(h) \
-    UNUSED_ARG(h.data), \
-    UNUSED_ARG(h.size), \
-    UNUSED_ARG(h.key_size), \
-    UNUSED_ARG(h.key_start), \
-    UNUSED_ARG(h.value_size), \
-    UNUSED_ARG(h.value_start), \
-    UNUSED_ARG(h.element_size), \
-    UNUSED_ARG(h.hash) \
+    CTL_ASSERT_EXISTS(h.data), \
+    CTL_ASSERT_EXISTS(h.size), \
+    CTL_ASSERT_EXISTS(h.key_size), \
+    CTL_ASSERT_EXISTS(h.key_start), \
+    CTL_ASSERT_EXISTS(h.value_size), \
+    CTL_ASSERT_EXISTS(h.value_start), \
+    CTL_ASSERT_EXISTS(h.element_size), \
+    CTL_ASSERT_EXISTS(h.hash)
 
 #define HASH_TYPE_CHECK(h) { \
     HASH_PARTIAL_TYPE_CHECK(h); \
-    ASSERT_IS_TYPE_OF(h.size, size_t); \
-    ASSERT_IS_TYPE_OF(h.key_size, size_t); \
-    ASSERT_IS_TYPE_OF(h.value_size, size_t); \
-    ASSERT_IS_TYPE_OF(h.value_start, size_t); \
-    ASSERT_IS_TYPE_OF(h.element_size, size_t); \
+    CTL_ASSERT_IS_TYPE_OF(h.size, size_t); \
+    CTL_ASSERT_IS_TYPE_OF(h.key_size, size_t); \
+    CTL_ASSERT_IS_TYPE_OF(h.value_size, size_t); \
+    CTL_ASSERT_IS_TYPE_OF(h.value_start, size_t); \
+    CTL_ASSERT_IS_TYPE_OF(h.element_size, size_t); \
 }
 
 #define HASH_DATA_TYPE_CHECK(h, key_type, value_type) { \
-    ASSERT_IS_TYPE_OF(h.data, HASH_BUCKET(key_type, value_type)); \
-    ASSERT_IS_TYPE_OF(h.hash, HASH_FUNCTION(key_type, hash)); \
+    CTL_ASSERT_IS_TYPE_OF(h.data, HASH_BUCKET(key_type, value_type)); \
+    CTL_ASSERT_IS_TYPE_OF(h.hash, HASH_FUNCTION(key_type, hash)); \
 }
 
 #define HASH_IT(type)               /* TODO */
@@ -79,11 +79,12 @@
 }
 #define HASH_INSERT(h, k, v) { \
     HASH_TYPE_CHECK(h); \
-    ASSERT_SAME_TYPE(h.data->data->key, k); \
-    ASSERT_SAME_TYPE(h.data->data->value, v); \
+    CTL_ASSERT_SAME_TYPE(h.data->data->key, k); \
+    CTL_ASSERT_SAME_TYPE(h.data->data->value, v); \
     ctl__hash_insert((CTL__Hash *)&h, &k, &v); \
 }
 #define HASH_FIND(h, key, comp, result) ( \
+    /* TODO */ \
     HASH_PARTIAL_TYPE_CHECK(h), \
     ctl__hash_find((CTL__Hash *)&h, &key, (void *)comp, &result) \
 )

@@ -6,7 +6,7 @@
 #include "c_types.h"
 #include "ctl_config.h"
 
-#ifdef HAS_ALLOCA
+#ifdef CTL_HAS_ALLOCA
 #   define CTL_TMP_ALLOC(x) alloca(x)
 #   define CTL_TMP_FREE(x) do {} while(0)
 #else
@@ -15,49 +15,64 @@
 #endif
 
 #ifdef __cplusplus
-#   define VOID_CAST(x) static_cast<void>(x)
+#   define CTL_INLINE inline
 #else
-#   define VOID_CAST(x) (void)(x)
+#   if defined __STDC_VERSION__ && __STDC_VERSION__ >= 199401
+#       define CTL_INLINE static inline
+#   else
+#       define CTL_INLINE static __attribute__((unused))
+#   endif
+#endif
+
+
+#ifdef __cplusplus
+#   define CTL_VOID_CAST(x) static_cast<void>(x)
+#else
+#   define CTL_VOID_CAST(x) (void)(x)
 #endif
 
 #ifdef DEBUG
-#   define ASSERT_IO(x, io) \
-        VOID_CAST( \
+#   define CTL_ASSERT_IO(x, io) \
+        CTL_VOID_CAST( \
             (x ? x : (fprintf(io, "Assertion failed on line %d in %s: %s\n", \
             __LINE__, \
             __FILE__, \
             #x), x)))
-#   define ASSERT_IS_TYPE_OF(x, type) { \
+#   define CTL_ASSERT_IS_TYPE_OF(x, type) { \
         type y = x; \
-        UNUSED_ARG(y); \
-        ASSERT_SAME_TYPE(x, y); \
+        CTL_UNUSED_ARG(y); \
+        CTL_ASSERT_SAME_TYPE(x, y); \
     }
-#   ifdef HAS_TYPEOF
-#       define ASSERT_SAME_TYPE(x, y) { \
+#   ifdef CTL_HAS_TYPEOF
+#       define CTL_ASSERT_SAME_TYPE(x, y) { \
             CTL_BOOL sizes_match = (sizeof(x) == sizeof(y)); \
-            ASSERT(sizes_match); \
+            CTL_ASSERT(sizes_match); \
             if(sizes_match) { \
                 typeof(x) z;\
                 z = y;\
             } \
         }
 #   else
-#       define ASSERT_SAME_TYPE(x, y) { \
+#       define CTL_ASSERT_SAME_TYPE(x, y) { \
             CTL_BOOL sizes_match = (sizeof(x) == sizeof(y)); \
-            ASSERT(sizes_match); \
+            CTL_ASSERT(sizes_match); \
         }
 #   endif
 #else
-#   define ASSERT_IO(x, io)
-#   define ASSERT_IS_TYPE_OF(x, type) { \
+#   define CTL_ASSERT_IO(x, io)
+#   define CTL_ASSERT_IS_TYPE_OF(x, type) { \
         type y = x; \
-        UNUSED_ARG(y); \
+        CTL_UNUSED_ARG(y); \
     }
-#   define ASSERT_SAME_TYPE(x, y)
+#   define CTL_ASSERT_SAME_TYPE(x, y)
 #endif
 
-#define ASSERT(x) ASSERT_IO(x, stderr)
+#define CTL_ASSERT(x) CTL_ASSERT_IO(x, stderr)
 
-#define UNUSED_ARG(x) x=x
+#define CTL_UNUSED_ARG(x) if(&x);
+
+CTL_INLINE int ctl_null_function_call(void) { return 0; }
+
+#define CTL_ASSERT_EXISTS(x) (x ? ctl_null_function_call() : 0)
 
 #endif
