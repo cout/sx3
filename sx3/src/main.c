@@ -106,6 +106,14 @@ void set_gl_mode(int fullscreen)
     exit(1);
 }
 
+int APIENTRY WinMain(HINSTANCE hInstance,
+                     HINSTANCE hPrevInstance,
+                     LPSTR     lpCmdLine,
+                     int       nCmdShow)
+{
+    return main(_argc, _argv);
+}
+
 int main(int argc, char *argv[])
 {
     int i;
