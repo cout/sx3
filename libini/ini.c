@@ -1,76 +1,70 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctl/c_hash.h>
 
-// FIX ME!! This libarary uses a linked list to store its data members;
-// this is very slow for lookups.
-// FIX ME!! This library uses strdup, which is not portable.
-
-typedef struct INI_ENTRY_ {
-    char *name;
-    char *value;
-    struct INI_ENTRY_ *next_entry;
-} INI_Entry;
-
-typedef struct INI_SECTION_{
-    char *name;
-    INI_Entry *first_entry;
-    struct INI_SECTION_ *next_section;
-} INI_Section;
-
+typedef struct INI_HASH_KEY_{
+    char *section_name;
+    char *key_name;
+} INI_Hash_Key;
+ 
 typedef struct {
-    INI_Section *first_section;
+    HASH(INI_Hash_Key*, char*) hashtable; 
 } INI_Context;
 
 #define LIBINI
 #include "ini.h"
 
+size_t ini_generate_hash_val(INI_Hash_Key **key);
+
 INI_Context* ini_new_context(void) {
     INI_Context *new_context = malloc(sizeof(INI_Context));
-    new_context->first_section = NULL;
+    // We're using 29 cause it seemed like a good number, oh, it's prime too :-) 
+    HASH_INIT(new_context->hashtable, 29, ini_generate_hash_val);
     return new_context;
 }
 
-void ini_free_entry(INI_Entry *entry) {
-    free(entry->name);
-    free(entry->value);
-    free(entry);
-}
-
-void ini_free_section(INI_Section *section) {
-    INI_Entry *entry = section->first_entry;
-    INI_Entry *next_entry;
-    while(entry) {
-        next_entry = entry->next_entry;
-        ini_free_entry(entry);
-        entry = next_entry;
-    }
-    free(section->name);
-    free(section);
-}
-
 void ini_free_context(INI_Context *context) {
-    INI_Section *section = context->first_section;
-    INI_Section *next_section;
-    while(section) {
-        next_section = section->next_section;
-        ini_free_section(section);
-        section = next_section;
-    }
+    //We are assuming the the program is ending, so we're not going to the
+    //trouble of freeing the keys and stuff. Hopefully ctl will handle this soon.
+    HASH_FREE(context->hashtable);
     free(context);
 }
 
+size_t ini_generate_hash_val(INI_Hash_Key **key) {
+    //Generating the hash val by multipling the ascii values of the strings.
+    size_t key_val = 0;
+    char *ptr = (*key)->section_name;
+    while(*ptr != '\0') {
+        key_val *= *ptr;
+        ++ptr; 
+    }
+    ptr = (*key)->key_name;
+    while(*ptr != '\0') {
+        key_val *= *ptr;
+        ++ptr; 
+    }
+    return (key_val);
+}
+
+CTL_BOOL key_comp(INI_Hash_Key **a, INI_Hash_Key **b) {
+    return (strcmp((*a)->section_name,(*b)->section_name) && 
+            strcmp((*a)->key_name,(*b)->key_name));
+}
+
 int ini_load_config_fp(INI_Context *ini, FILE *fp) {
+    //These function reads in the contents of a ini file, line by line. 
     char s[1024];
-    INI_Section *section = ini->first_section;
-    INI_Entry *entry = 0;
-    for(;;) {
+    char *section_name = 0; //stores the current section name, we only see it
+                            //on the line that starts the ini section. 
+
+    while(TRUE) {
         fgets(s, sizeof(s), fp);
         if(feof(fp)) break;
 
         if(s[0] == '#' || s[0] == ';') {
 
-            // Comment
+            // Comment, ignoring
 
         } else if(s[0] == '[') {
 
@@ -79,39 +73,28 @@ int ini_load_config_fp(INI_Context *ini, FILE *fp) {
             while(*ptr != '\r' && *ptr != '\n' && *ptr != ']' && *ptr != 0)
                 ++ptr;
             *ptr = 0;
+            section_name = malloc(strlen(name)+1);
+            strcpy(section_name,name);
 
-            if(!section) {
-                // First section
-                ini->first_section = malloc(sizeof(INI_Section));
-                section = ini->first_section;
-            } else {
-                section->next_section = malloc(sizeof(INI_Section));
-                section = section->next_section;
-            }
-            section->first_entry = entry = NULL;
-            section->next_section = NULL;
-            section->name = strdup(name);
-
-        } else {
+        } else { 
 
             // New entry
             char name[1024];
             char value[1024];
+            char* val;
+            INI_Hash_Key *new_key = 0;
             ini_split_var_value(s, name, sizeof(name), value, sizeof(value));
 
-            if(!section) continue;
-            if(!entry) {
-                // First entry
-                section->first_entry = malloc(sizeof(INI_Entry));
-                entry = section->first_entry;
-            } else {
-                entry->next_entry = malloc(sizeof(INI_Entry));
-                entry = entry->next_entry;
-            }
-            entry->next_entry = NULL;
-            entry->name = strdup(name);
-            entry->value = strdup(value);
+            //Should the below event be recorded anywhere? (TM, SB)
+            if(!section_name) continue;
 
+            new_key = malloc(sizeof(INI_Hash_Key));
+            new_key->section_name = section_name;
+            new_key->key_name = malloc(strlen(name) + 1);
+            strcpy(new_key->key_name, name);
+            val = malloc(strlen(value) + 1);
+            strcpy(val, value);
+            HASH_INSERT(ini->hashtable, new_key, val); 
         }
     }
 
@@ -132,23 +115,24 @@ const char *ini_get_value(
     INI_Context * ini,
     const char *section,
     const char *var) {
+    //This function is a glorified hash look up; we just put section and 
+    //var in a new key and get the value.
+    INI_Hash_Key* key = malloc(sizeof(INI_Hash_Key));
+    HASH_ELEMENT(INI_Hash_Key* , char*) result;
+    //We do these string copies cause we would otherwise be passing const 
+    //parameters to a function in which they would not be const.
+    key->section_name = malloc(strlen(section) + 1);
+    strcpy(key->section_name, section);
+    key->key_name = malloc(strlen(var) + 1);
+    strcpy(key->key_name, var);
 
-    INI_Section *sec = ini->first_section;
-    while(sec) {
-        if(!strcasecmp(section, sec->name)) {
-            INI_Entry *ent = sec->first_entry;
-            while(ent) {
-                if(!strcasecmp(var, ent->name)) {
-                    return ent->value;
-                }
-                ent = ent->next_entry;
-            }
-            return NULL;
-        }
-        sec = sec->next_section;
+    if(!HASH_FIND(ini->hashtable, key, key_comp, result)) {
+        free(key);
+        return NULL;
+    } else {
+        free(key);
+        return result.value;
     }
-
-    return NULL;
 }
 
 void ini_split_var_value(

@@ -23,6 +23,7 @@ const char *ini_get_value(
     
 void ini_split_var_value(
     const char *string,
+/* WHAT IS string paul??? i  A ini key? (TM AND SB) */
     char *var, int var_len,
     char *val, int val_len);
 
