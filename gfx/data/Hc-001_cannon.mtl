@@ -1,0 +1,36 @@
+# 
+# Wavefront material file
+# Converted by 3D Exploration 1.6.00
+# XDimension Software, LLC
+# http://www.xdsoft.com/explorer/
+# 
+newmtl HC_001_Cannon_Housing_Fwd
+	 Ka 0 0 0
+	 Kd 0.752941 0.752941 0.752941
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+newmtl HC_001_Cannon_Barrel
+	 Ka 0 0 0
+	 Kd 0.752941 0.752941 0.752941
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+newmtl HC_001_Cannon_Housing
+	 Ka 0 0 0
+	 Kd 0.752941 0.752941 0.752941
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+newmtl HC_001_Cannon_Barrel_Ring
+	 Ka 0 0 0
+	 Kd 0.8 0 0.0196078
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+newmtl HC_001_Cannon_Nozzle
+	 Ka 0 0 0
+	 Kd 0.8 0 0.0196078
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8

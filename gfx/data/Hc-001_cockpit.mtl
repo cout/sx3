@@ -1,0 +1,45 @@
+# 
+# Wavefront material file
+# Converted by 3D Exploration 1.6.00
+# XDimension Software, LLC
+# http://www.xdsoft.com/explorer/
+# 
+newmtl HC_001_Cockpit_Bottom
+	 Ka 0 0 0
+	 Kd 0.784314 0.784314 0.784314
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+newmtl HC_001_Cockpit_Fwd
+	 Ka 0 0 0
+	 Kd 0.752941 0.752941 0.752941
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+newmtl HC_001_Cockpit_Rear
+	 Ka 0 0 0
+	 Kd 0.752941 0.752941 0.752941
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+newmtl HC_001_Cockpit_Top
+	 Ka 0 0 0
+	 Kd 0.784314 0.784314 0.784314
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+	 map_Kd Images/S3xGame/HC-001_Cockpit_Top_Color.tga
+newmtl HC_001_Cockpit_Right
+	 Ka 0 0 0
+	 Kd 0.784314 0.784314 0.784314
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+	 map_Kd Images/S3xGame/HC-001_Cockpit_Left_Color.tga
+newmtl HC_001_Cockpit_Left
+	 Ka 0 0 0
+	 Kd 0.784314 0.784314 0.784314
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+	 map_Kd Images/S3xGame/HC-001_Cockpit_Left_Color.tga

@@ -1,0 +1,36 @@
+# 
+# Wavefront material file
+# Converted by 3D Exploration 1.6.00
+# XDimension Software, LLC
+# http://www.xdsoft.com/explorer/
+# 
+newmtl HC_001_Base_Bottom
+	 Ka 0 0 0
+	 Kd 0.752941 0.752941 0.752941
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+newmtl HC_001_Base_Top_Edge
+	 Ka 0 0 0
+	 Kd 0.752941 0.752941 0.752941
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+newmtl HC_001_Base_Edge
+	 Ka 0 0 0
+	 Kd 0.752941 0.752941 0.752941
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+newmtl HC_001_Base_Top
+	 Ka 0 0 0
+	 Kd 0.752941 0.752941 0.752941
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
+newmtl HC_001_Base_Pivot
+	 Ka 0 0 0
+	 Kd 0.752941 0.752941 0.752941
+	 Ks 0 0 0
+	 illum 2
+	 Ns 8
