@@ -5,6 +5,11 @@ LIBDIR  = $(PREFIX)/lib
 INCDIR  = $(PREFIX)/include
 SECTION = 1
 
+ifneq ($(ComSpec),)
+	COMSPEC=$ComSpec
+endif
+
+
 ifeq ($(COMSPEC),)
 	REALMAINOUT=$(MAINOUT)
 
