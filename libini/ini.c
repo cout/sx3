@@ -8,23 +8,23 @@ typedef struct INI_HASH_KEY_{
     char *key_name;
 } INI_Hash_Key;
  
-typedef struct {
+struct INI_Context_ {
     HASH(INI_Hash_Key*, char*) hashtable; 
-} INI_Context;
+};
 
 #define LIBINI
 #include "ini.h"
 
 size_t ini_generate_hash_val(INI_Hash_Key **key);
 
-INI_Context* ini_new_context(void) {
-    INI_Context *new_context = malloc(sizeof(INI_Context));
+struct INI_Context_* ini_new_context(void) {
+    struct INI_Context_ *new_context = malloc(sizeof(struct INI_Context_));
     // We're using 29 cause it seemed like a good number, oh, it's prime too :-) 
     HASH_INIT(new_context->hashtable, 29, ini_generate_hash_val);
     return new_context;
 }
 
-void ini_free_context(INI_Context *context) {
+void ini_free_context(struct INI_Context_ *context) {
     //We are assuming the the program is ending, so we're not going to the
     //trouble of freeing the keys and stuff. Hopefully ctl will handle this soon.
     HASH_FREE(context->hashtable);
@@ -52,7 +52,7 @@ CTL_BOOL key_comp(INI_Hash_Key **a, INI_Hash_Key **b) {
             strcmp((*a)->key_name,(*b)->key_name));
 }
 
-int ini_load_config_fp(INI_Context *ini, FILE *fp) {
+int ini_load_config_fp(struct INI_Context_ *ini, FILE *fp) {
     //These function reads in the contents of a ini file, line by line. 
     char s[1024];
     char *section_name = 0; //stores the current section name, we only see it
@@ -102,7 +102,7 @@ int ini_load_config_fp(INI_Context *ini, FILE *fp) {
     return INI_OK;
 }
 
-int ini_load_config_file(INI_Context * ini, const char *filename) {
+int ini_load_config_file(struct INI_Context_ * ini, const char *filename) {
     FILE *fp;
     if((fp = fopen(filename, "rt")) == NULL) {
         return INIERR_OPEN;
@@ -112,7 +112,7 @@ int ini_load_config_file(INI_Context * ini, const char *filename) {
 }
 
 const char *ini_get_value(
-    INI_Context * ini,
+    struct INI_Context_ * ini,
     const char *section,
     const char *var) {
     //This function is a glorified hash look up; we just put section and 

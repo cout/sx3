@@ -1,9 +1,7 @@
 #ifndef INI_H
 #define INI_H
 
-#ifndef LIBINI
-typedef void INI_Context;
-#endif
+typedef struct INI_Context_ INI_Context;
 
 enum ini_return_values {
     INI_OK,
