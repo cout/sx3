@@ -38,9 +38,9 @@ CCC=CC
 .c.o: 
 	$(CC) $(INCLUDES) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-include Makefile.d
-
 default: dep $(OUT)
+
+include Makefile.d
 
 $(OUT): $(OBJ)
 	$(CC) $(CFLAGS) -o $(OUT) $(OBJ) $(LDFLAGS) $(LIBS)
