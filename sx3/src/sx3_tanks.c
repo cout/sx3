@@ -5,7 +5,6 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <ini.h>
 #include "sx3_tanks.h"
 #include "sx3_global.h"
 #include "sx3_terrain.h"
@@ -163,71 +162,118 @@ sx3_retrieve_tank (
     
 // Load a tank model into a tank model structure
 // FIX ME!! This should use a generic configuration file module
-SX3_ERROR_CODE sx3_load_tank_model(const char *f, struct Tank_Model *m)
-{
-    const char *val;
+SX3_ERROR_CODE sx3_load_tank_model(const char *f, struct Tank_Model *m) {
+    FILE *fp;
+    char s[1024];
+    char *cmd, *arg, *tmp;
 
-    INI_Context *ini = ini_new_context();
-    if(ini_load_config_file(ini, f) != INI_OK)
-    {
-        ini_free_context(ini);
+    if((fp = fopen(f, "rt")) == NULL)
         return SX3_ERROR_CANNOT_OPEN_FILE;
+
+    // Read the tank file
+    while(!feof(fp))
+    {
+        fgets(s, sizeof(s), fp);
+
+        // Here's our own little strtok
+        cmd = arg = s;
+        while(*arg != 0 && *arg != ' ' && *arg != '\t') arg++;
+        if(*arg == 0) continue; // error condition, what should we do?
+        *arg = 0;
+        arg++;
+        while(*arg == '\t' || *arg == ' ') arg++;
+
+        // Now strip the \n from arg
+        tmp = arg + strlen(arg) - 1;
+        while(*tmp == '\n' || *tmp == '\r') {
+            *tmp = 0;
+            tmp--;
+        }
+
+        // Models
+        if(!strcasecmp(cmd, "Model")) {
+            if(!strcasecmp(arg, "None")) {
+                strcpy(m->model_file, "");
+            } else {
+                strcpy(m->model_file, arg);
+            }
+
+        } else if(!strcasecmp(cmd, "Turret")) {
+            if(!strcasecmp(arg, "None")) {
+                strcpy(m->turret_file, "");
+            } else {
+                strcpy(m->turret_file, arg);
+            }
+
+        } else if(!strcasecmp(cmd, "Weapon")) {
+            if(!strcasecmp(arg, "None")) {
+                strcpy(m->weapon_file, "");
+            } else {
+                strcpy(m->weapon_file, arg);
+            }
+        
+        // Textures
+        } else if(!strcasecmp(cmd, "ModelTex")) {
+            if(!strcasecmp(arg, "None")) {
+                strcpy(m->model_tex_file, "");
+            } else {
+                strcpy(m->model_tex_file, arg);
+            }
+            
+        } else if(!strcasecmp(cmd, "TurretTex")) {
+            if(!strcasecmp(arg, "None")) {
+                strcpy(m->turret_tex_file, "");
+            } else {
+                strcpy(m->turret_tex_file, arg);
+            }
+
+        } else if(!strcasecmp(cmd, "WeaponTex")) {
+            if(!strcasecmp(arg, "None")) {
+                strcpy(m->weapon_tex_file, "");
+            } else {
+                strcpy(m->weapon_tex_file, arg);
+            }
+
+        // Turret info
+        } else if(!strcasecmp(cmd, "TurretBase")) {
+            sscanf(arg, "%f %f %f",
+                &m->turret_base[0], &m->turret_base[1], &m->turret_base[2]);
+        
+        } else if(!strcasecmp(cmd, "TurretTrans")) {
+            sscanf(arg, "%f %f %f",
+                &m->turret_trans[0], &m->turret_trans[1], &m->turret_trans[2]);
+
+        } else if(!strcasecmp(cmd, "TurretRot")) {
+            sscanf(arg, "%f %f %f",
+                &m->turret_rot[0], &m->turret_rot[1], &m->turret_rot[2]);
+
+        // Weapon info
+        } else if(!strcasecmp(cmd, "WeaponBase")) {
+            sscanf(arg, "%f %f %f",
+                &m->weapon_base[0], &m->weapon_base[1], &m->weapon_base[2]);
+        
+        } else if(!strcasecmp(cmd, "WeaponTrans")) {
+            sscanf(arg, "%f %f %f",
+                &m->weapon_trans[0], &m->weapon_trans[1], &m->weapon_trans[2]);
+
+        } else if(!strcasecmp(cmd, "WeaponRot")) {
+            sscanf(arg, "%f %f %f",
+                &m->weapon_rot[0], &m->weapon_rot[1], &m->weapon_rot[2]);
+
+        // Model info
+        } else if(!strcasecmp(cmd, "Scale")) {
+            sscanf(arg, "%f %f %f",
+                &m->scale[0], &m->scale[1], &m->scale[2]);
+        
+        } else if(!strcasecmp(cmd, "Trans")) {
+            sscanf(arg, "%f %f %f",
+                &m->trans[0], &m->trans[1], &m->trans[2]);
+
+        } else if(!strcasecmp(cmd, "Rotate")) {
+            sscanf(arg, "%f %f %f",
+                &m->rotate[0], &m->rotate[1], &m->rotate[2]);
+        }
     }
-
-    // Set default values
-    strncpy(m->model_file, "", sizeof(m->model_file));
-    strncpy(m->model_tex_file, "", sizeof(m->model_tex_file));
-    strncpy(m->turret_file, "", sizeof(m->turret_file));
-    strncpy(m->turret_tex_file, "", sizeof(m->turret_tex_file));
-    strncpy(m->weapon_file, "", sizeof(m->weapon_file));
-    strncpy(m->weapon_tex_file, "", sizeof(m->weapon_tex_file));
-    v_zero(m->scale);
-    v_zero(m->trans);
-    v_zero(m->rotate);
-    v_zero(m->turret_base);
-    v_zero(m->turret_trans);
-    v_zero(m->turret_rot);
-    v_zero(m->weapon_base);
-    v_zero(m->weapon_trans);
-    v_zero(m->weapon_rot);
-
-    // Tank base
-    if((val = ini_get_value(ini, "Tank", "Model")) != 0)
-        strncpy(m->model_file, val, sizeof(m->model_file));
-    if((val = ini_get_value(ini, "Tank", "Texture")) != 0)
-        strncpy(m->model_tex_file, val, sizeof(m->model_tex_file));
-    if((val = ini_get_value(ini, "Tank", "Scale")) != 0)
-        sscanf(val, "%f %f %f", &m->scale[0], &m->scale[1], &m->scale[2]);
-    if((val = ini_get_value(ini, "Tank", "Trans")) != 0)
-        sscanf(val, "%f %f %f", &m->trans[0], &m->trans[1], &m->trans[2]);
-    if((val = ini_get_value(ini, "Tank", "Rotate")) != 0)
-        sscanf(val, "%f %f %f", &m->rotate[0], &m->rotate[1], &m->rotate[2]);
-
-    // Turret
-    if((val = ini_get_value(ini, "Turret", "Model")) != 0)
-        strncpy(m->turret_file, val, sizeof(m->turret_file));
-    if((val = ini_get_value(ini, "Turret", "Texture")) != 0)
-        strncpy(m->turret_tex_file, val, sizeof(m->turret_tex_file));
-    if((val = ini_get_value(ini, "Turret", "Base")) != 0)
-        sscanf(val, "%f %f %f", &m->turret_base[0], &m->turret_base[1], &m->turret_base[2]);
-    if((val = ini_get_value(ini, "Turret", "Trans")) != 0)
-        sscanf(val, "%f %f %f", &m->turret_trans[0], &m->turret_trans[1], &m->turret_trans[2]);
-    if((val = ini_get_value(ini, "Turret", "Rotate")) != 0)
-        sscanf(val, "%f %f %f", &m->turret_rot[0], &m->turret_rot[1], &m->turret_rot[2]);
-
-    // Weapon
-    if((val = ini_get_value(ini, "Weapon", "Model")) != 0)
-        strncpy(m->weapon_file, val, sizeof(m->weapon_file));
-    if((val = ini_get_value(ini, "Weapon", "Texture")) != 0)
-        strncpy(m->weapon_tex_file, val, sizeof(m->weapon_tex_file));
-    if((val = ini_get_value(ini, "Weapon", "Base")) != 0)
-        sscanf(val, "%f %f %f", &m->weapon_base[0], &m->weapon_base[1], &m->weapon_base[2]);
-    if((val = ini_get_value(ini, "Weapon", "Trans")) != 0)
-        sscanf(val, "%f %f %f", &m->weapon_trans[0], &m->weapon_trans[1], &m->weapon_trans[2]);
-    if((val = ini_get_value(ini, "Weapon", "Rotate")) != 0)
-        sscanf(val, "%f %f %f", &m->weapon_rot[0], &m->weapon_rot[1], &m->weapon_rot[2]);
-
-    ini_free_context(ini);
 
     // Now load the models
     // FIX ME!! We should check the error codes here.
@@ -259,6 +305,7 @@ SX3_ERROR_CODE sx3_load_tank_model(const char *f, struct Tank_Model *m)
     printf("Textures: %d %d %d\n",
         m->model.skin, m->turret.skin, m->weapon.skin);
 
+    fclose(fp);
     return SX3_ERROR_SUCCESS;
 
 }

@@ -16,9 +16,6 @@
 // FIX ME!! This should be a run-time option.
 #define NUM_SOUNDS 4
 
-// We set this to 1 if audio has been initialized.
-int audio_ok = 0;
-
 // The structure we use to store the audio data and mix it.
 struct sample {
      Uint8 *data;
@@ -64,18 +61,14 @@ void sx3_init_audio()
     if(SDL_OpenAudio(&fmt, NULL) < 0)
     {
         fprintf(stderr, "Unable to open audio: %s\n", SDL_GetError());
-        audio_ok = 0;
+        exit(1);
     }
-    else
-    {
-        printf("Sx3 audio subsystem initialized\n");
-        audio_ok = 1;
-    }
+
+    printf("Sx3 audio subsystem initialized\n");
 }
 
 void sx3_close_audio()
 {
-    if(!audio_ok) return;
     SDL_CloseAudio();
 }
 
@@ -86,8 +79,6 @@ void sx3_play_sound(const char *file)
     Uint8 *data;
     Uint32 dlen;
     SDL_AudioCVT cvt;
-
-    if(!audio_ok) return;
 
     // Look for an empty (or finished) sound slot
     for(index=0; index<NUM_SOUNDS; ++index)

@@ -13,7 +13,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <ini.h>
 #include "sx3_tanks.h"
 #include "sx3_terrain.h"
 #include "sx3_global.h"
@@ -147,7 +146,7 @@ struct sx3_global_variable {
 // through the access functions for the global variable database, thereby
 // avoiding direct access to the global variables.
 
-const static struct sx3_global_variable sx3_global_varlist[] = {
+static struct sx3_global_variable sx3_global_varlist[] = {
     {"major_version",           SX3_GLOBAL_INT,     &g_major_version,               0, 1},
     {"minor_version",           SX3_GLOBAL_INT,     &g_minor_version,               0, 1},
     {"build_version",           SX3_GLOBAL_INT,     &g_build_version,               0, 1},
@@ -951,30 +950,5 @@ SX3_ERROR_CODE sx3_find_global_var(const char *ss, char *var_name)
 
     // No matches found 
     var_name[0] = (char)0;
-    return SX3_ERROR_SUCCESS;
-}
-
-SX3_ERROR_CODE sx3_read_config_file(const char *filename)
-{
-    INI_Context *ini = ini_new_context();
-    const struct sx3_global_variable *var;
-    const char *val;
-
-    if(ini_load_config_file(ini, filename) != INI_OK)
-    {
-        ini_free_context(ini);
-        return SX3_ERROR_CANNOT_OPEN_FILE;
-    }
-
-    for(var = sx3_global_varlist; var->data; ++var)
-    {
-        if((val = ini_get_value(ini, "Global", var->name)) != 0)
-        {
-            printf("Setting %s to %s\n", var->name, val);
-            sx3_set_global_value(var->name, val);
-        }
-    }
-
-    ini_free_context(ini);
     return SX3_ERROR_SUCCESS;
 }

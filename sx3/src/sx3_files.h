@@ -15,6 +15,5 @@
 #define SX3_AUDIO_HIT				"data/audio/4dar27f.wav"
 #define SX3_AUDIO_BYEBYE			"data/audio/firrock3.wav"
 #define SX3_DEFAULT_FONT_FILE		"data/fonts/default.txf"
-#define SX3_GLOBAL_CONFIG_FILE      "config/sx3.ini"
 
 #endif

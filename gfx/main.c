@@ -152,44 +152,6 @@ void animate(int value) {
     }
 }
 
-void gl_settings() {
-    if(texture) {
-        glEnable(GL_TEXTURE_2D);
-    } else {
-        glDisable(GL_TEXTURE_2D);
-    }
-
-    if(wireframe) {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        glDisable(GL_CULL_FACE);
-    }
-    else {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        glEnable(GL_CULL_FACE);
-    }
-
-    if(filtering) {
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
-                        GL_LINEAR);
-        // For some reason, setting the MIN filter will cause some video
-        // cards to crash on Win32.
-#ifndef WIN32
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                GL_LINEAR);
-#endif
-    } else {
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
-                        GL_NEAREST);
-        // For some reason, setting the MIN filter will cause some video
-        // cards to crash on Win32.
-#ifndef WIN32
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                GL_NEAREST);
-#endif
-    }
-}
-
-
 // This was originally a GLUT function for capturing menu events.  It
 // no longer serves that function, but instead acts as a multi-purpose
 // function for setting display options.
@@ -197,32 +159,55 @@ void menu_func(int choice) {
     switch(choice) {
     case MENU_TEXTURE:
         texture = !texture;
-        gl_settings();
+        if(texture) glEnable(GL_TEXTURE_2D);
+        else glDisable(GL_TEXTURE_2D);
         display();
         break;
     case MENU_LIGHTING:
         lighting = !lighting;
-        gl_settings();
         display();
         break;
     case MENU_WIREFRAME:
         wireframe = !wireframe;
-        gl_settings();
+        if(wireframe) {
+            glPolygonMode(GL_FRONT, GL_LINE);
+            glDisable(GL_CULL_FACE);
+        }
+        else {
+            glPolygonMode(GL_FRONT, GL_FILL);
+            glEnable(GL_CULL_FACE);
+        }
         display();
         break;
     case MENU_LINEAR:
         filtering = !filtering;
-        gl_settings();
+        if(filtering) {
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+                            GL_LINEAR);
+            // For some reason, setting the MIN filter will cause some vide
+            // cards to crash on Win32.
+#ifndef WIN32
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+                    GL_LINEAR);
+#endif
+        } else {
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+                            GL_NEAREST);
+            // For some reason, setting the MIN filter will cause some vide
+            // cards to crash on Win32.
+#ifndef WIN32
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+                    GL_NEAREST);
+#endif
+        }
         display();
         break;
     case MENU_AXES:
         axes = !axes;
-        gl_settings();
         display();
         break;
     case MENU_WEAPON:
         weapon = !weapon;
-        gl_settings();
         display();
         break;
     case MENU_ANIM_FORWARD: frameDirection = 1; break;
@@ -278,7 +263,18 @@ void init(const char *modelfile, const char *weaponfile, const char *skinfile) {
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glShadeModel(GL_SMOOTH);
     glEnable(GL_SMOOTH);
-    // glEnable(GL_POLYGON_SMOOTH);
+    glEnable(GL_POLYGON_SMOOTH);
+
+    // Only draw one side of the polygons -- note the use of GL_CW.  This
+    // is because MD2 models draw their polygins in clockwise order, instead
+    // of counter-clockwise order, as is the OpenGL default.  The new version
+    // of the MD2 library takes this into account, but the old version did
+    // not.
+    glPolygonMode(GL_FRONT, GL_FILL);
+    glPolygonMode(GL_BACK, GL_LINE);
+    glFrontFace(GL_CW);
+    glCullFace(GL_BACK);
+    glEnable(GL_CULL_FACE);
 
     // Create a light source.
     glLightfv(GL_LIGHT0, GL_AMBIENT, light0_ambient);
@@ -289,8 +285,11 @@ void init(const char *modelfile, const char *weaponfile, const char *skinfile) {
     // Enable lighting, and enable the light source
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
-    // glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_FALSE);
+    glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_FALSE);
 
+    // Turn on texturing
+    glEnable(GL_TEXTURE_2D);
+    
     // Parse the model files and put the frames into a display list
     retval = parse_model(modelfile, skinfile, &model);
     assert(retval != MODELERR_OPEN);
@@ -302,15 +301,11 @@ void init(const char *modelfile, const char *weaponfile, const char *skinfile) {
     assert(retval != MODELERR_DISPLAYLIST);
     assert(retval == MODEL_OK);
     retval = parse_model(weaponfile, "", &weapon_model);
-
-    gl_settings();
 }
 
 // SDL doesn't use callbacks, so we must check the events ourselves
 void main_loop() {
     SDL_Event event;
-    SDL_Event prev_event;
-    int retval;
 
     for(;;) {
         // We can wait on an event (as we are doing here), or we can poll for
@@ -318,7 +313,6 @@ void main_loop() {
         // call our idle function.  This allows for a slightly more versatile
         // event handler than with a callback-based approach, as with GLUT.
         if(!SDL_WaitEvent(&event)) continue;
-event_switch:
         switch(event.type) {
             case SDL_MOUSEBUTTONDOWN:
             case SDL_MOUSEBUTTONUP:
@@ -326,19 +320,6 @@ event_switch:
                     event.button.x, event.button.y);
                 break;
             case SDL_MOUSEMOTION:
-                // This is a hack to keep the motion from being so jumpy on
-                // slow cards
-                do {
-                    prev_event = event;
-                    retval = SDL_PollEvent(&event);
-                } while(retval != 0 && event.type == SDL_MOUSEMOTION);
-                if(retval != 0) {
-                    // SDL_PushEvent(&event);
-                    // event = prev_event;
-                    mouse_motion(prev_event.motion.state,
-                        prev_event.motion.x, prev_event.motion.y);
-                    goto event_switch;
-                }
                 mouse_motion(event.motion.state,
                     event.motion.x, event.motion.y);
                 break;
@@ -382,27 +363,25 @@ int main(int argc, char *argv[]) {
     // Set our desired GL attributes.  I'm not sure if this is necessary,
     // and I'm not sure what happens if the desired attributes cannot be
     // negotiated.
-/*
-    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
-    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 6);
-    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
+    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
-*/
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    if(SDL_SetVideoMode(640, 480, 16, SDL_OPENGL) == NULL) {
+    if(SDL_SetVideoMode(512, 512, 24, SDL_OPENGL) == NULL) {
         fprintf(stderr, "Unable set set GL mode\n");
         exit(1);
     }
 
     // Set the title of the Window, and use the default icon.  We could
     // specify an icon for the window, if we had one.
-    SDL_WM_SetCaption("Model Viewer", NULL);
+    SDL_WM_SetCaption("MD2 Viewer", NULL);
 
-    // Initialize the viewer
+    // Initialize the MD2 viewer
     init(argv[1], argv[2], argv[3]);
 
-    // Display the model for the first time
-    set_window_size(640, 480);
+    // Display the MD2 model for the first time
+    set_window_size(512, 512);
     display();
 
     // Go into the event loop.  Unlike with GTK or GLUT, this function *will*

@@ -16,15 +16,14 @@ ifeq ($(COMSPEC),)
 	CFLAGS= -g -O3 -Wall `imlib-config --cflags` `sdl-config --cflags`
 	LDFLAGS=-L/usr/X11R6/lib -L/usr/local/lib -L../local/lib \
 		`sdl-config --libs`
-	LIBS= -lm -lGL -lGLU -lgfx -lSDL_image -lgltext -lphysics -lini
+	LIBS= -lm -lGL -lGLU -lgfx -lSDL_image -lgltext -lphysics
 	INCLUDES=-I/usr/local/include -I/usr/X11R6/include -I../local/include
 	OUT=sx3
 else
 	# Win32 mode -- home sick home
 	CFLAGS=-g -O3 -Wall
 	LDFLAGS=-L../local/lib
-	LIBS=-lgfx -lphysics -lopengl32 -lglu32 -lm -lSDL -lSDL_image -lgltext \
-        -lini
+	LIBS=-lgfx -lphysics -lopengl32 -lglu32 -lm -lSDL -lSDL_image
 	INCLUDES=-I../local/include
 	OUT=sx3.exe
 endif
@@ -39,9 +38,9 @@ CCC=CC
 .c.o: 
 	$(CC) $(INCLUDES) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-default: dep $(OUT)
-
 include Makefile.d
+
+default: dep $(OUT)
 
 $(OUT): $(OBJ)
 	$(CC) $(CFLAGS) -o $(OUT) $(OBJ) $(LDFLAGS) $(LIBS)

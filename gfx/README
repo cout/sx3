@@ -1,0 +1,28 @@
+MD2 Test version 2
+Paul Brannan (pbranna@clemson.edu)
+
+This is an MD2 (QuakeII model) viewer written in OpenGL.  It is designed
+to be portable, but has yet been tested on a large number of platforms.
+Simply place your model information in the tank.def file and run md2.exe.
+
+Navigation
+
+Use the mouse or keyboard to navigate.  The left mouse button controls
+zoom and rotation about the y axis, while the middle mouse button controls
+rotation about the y and x axes.  The right mouse button will bring up a
+menu.
+
+Keyboard controls
+
+T       Toggle textures
+L       Toggle lighting
+A       Toggle axes
+W       Toggle weapon
++       Zoom in
+-       Zoom out
+8       Rotate up
+2       Rotate down
+4       Rotate left
+6       Rotate right
+E,X,Q   Exit
+

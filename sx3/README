@@ -1,0 +1,7 @@
+This is the new structure for the Sx3 codebase.  We should create new libraries
+of functions whenever possible, so the sx3 code will be as uncluttered as
+possible.
+
+Something else should go into this README.  Perhaps a license or something.
+
+Please see the TODO list for what work still needs to be done.

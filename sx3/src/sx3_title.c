@@ -114,13 +114,8 @@ void sx3_title()
                 break; // we don't want to call display yet
             }
             if(event.type == SDL_QUIT) exit(0);
-            if(event.type == SDL_ACTIVEEVENT ||
-               event.type == SDL_SYSWMEVENT  ||
-               event.type == SDL_VIDEORESIZE)
-            {
-                sx3_title_display();
-            }
         }
+        sx3_title_display();
     }
 
     // Fade the title screen out

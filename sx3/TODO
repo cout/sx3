@@ -29,6 +29,7 @@ High priority:
 - Load some tank models.
 
 Med priority:
+- Add support for an ini file; perhaps this should be in xml?
 - Rewrite some of the code to use the sx3_global module.
 - Write some GUI code and user interface code.
 - Write code for an options menu and store menu.

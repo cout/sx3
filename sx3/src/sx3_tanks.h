@@ -73,7 +73,7 @@ struct Tank_Abilities {
     float       water_resist;     // in meters under 0
     short int   floating;         // 0 or 1
     float       max_power;
-    float       max_energy;
+    float         max_energy;
     float       max_angle;        // in degrees
     float       min_angle;        // in degrees
     float       rotation_angle;   // ~"fov" in degrees

@@ -1,0 +1,5 @@
+This is the inline matrix "library" for C.  It's not a traditional library,
+just a header file, so that the routines will run really fast.  Perhaps
+future versions will support MMX.
+
+-- Paul Brannan

@@ -1,0 +1,76 @@
+mingw32:
+http://sourceforge.net/project/showfiles.php?group_id=2435&release_id=15084
+
+BE SURE TO GET THE LATEST VERSIONS OF EACH FILE.  In particular, the mingw32-runtime
+package is listed in reverse chronological order.
+
+1) Unzip the .zip files to C:\mingw32 (or wherever you desire; I'll assume that this is
+   the location you are installing to for the remainder of this document)
+2) Add C:\mingw32 to your path (edit autoexec.bat to do this, or if in Win2000, use
+   the control panel)
+3) Extract the .tar.gz files to C:\mingw32 as well.  Use PowerArchiver or Winzip for
+   this.
+4) The runtime libraries may still not be installed correctly.  Be sure to move the
+   contents of C:\mingw32\mingw32\include to C:\mingw32\mingw32\g++-3 (this directory's
+   short name is g__-3~1).
+
+----------------------------------------------------------------------------------------
+
+GNU make:
+ftp://ftp.xraylith.wisc.edu/pub/khan/gnu-win32/mingw32/ports/make-3.77-mingw32.zip
+
+1) Unzip this file to C:\mingw32
+
+----------------------------------------------------------------------------------------
+
+SDL:
+http://www.libsdl.org/download-1.1.html
+
+1) Download SDL-devel-1.1.7-mingw32.tar.gz and SDL-1.1.7-win32.zip.
+2) Extract SDL-devel-1.1.7-mingw32.tar.gz to a temporary directory (I recommend
+   PowerArchiver for this, but Winzip will also work).
+3) Extract i386-mingw32msvc.tar.gz (which is now in the temporary directory) to
+   another temporary directory (we'll call it c:\temp).
+4) Copy the contents of c:\temp\i386-mingw32msvc to c:\mingw32
+5) Unzip SDL-1.1.7-win32.zip, which you downloaded, to C:\windows\system
+
+----------------------------------------------------------------------------------------
+
+SDL_image:
+http://www.libsdl.org/projects/SDL_image/bin/SDL_image-devel-1.0.4-VC++.zip
+
+1) Download the above file.
+2) Extract it to a temporary directory
+3) Copy sdl_image.h (in the sdl_image-1.0.4/include directory) to c:\mingw32\include\sdl
+4) Copy sdl_image.lib (in the sdl_image-1.0.4/lib directory) to c:\mingw32\lib
+5) Copy sdl_image.dll (in the sdl_image-1.0.4/lib directory) to c:\windows\system
+
+----------------------------------------------------------------------------------------
+
+Vim (or equivalent):
+http://www.vim.org
+http://www.blockdev.net/Community/Editors/
+
+1) You will need a good editor (one that handles TABS properly) in order to create a
+   Makefile.  Makefiles DO NOT work with spaces.  I recommend using vim or gvim, but
+   notepad or MS-DOS edit WILL NOT work.
+2) You will need to get the following files: vim57rt.zip vim57w32.zip.
+3) Unizip these files to C:\vim57 (or whatever -- but the directory name MUST be vim57)
+4) Run the install.exe program and follow the instructions.
+5) Create a batch file vi.bat if you want to use the vi command to run vim.
+6) The installer doesn't always edit your path correctly.  You may need to do this by
+   hand.
+
+----------------------------------------------------------------------------------------
+
+Unix-95 or Cygwin:
+http://virtunix.itribe.net/mystuff.html
+http://sources.redhat.com/cygwin/
+
+1) These instructions are for Unix-95.  All we really need is cp.exe and a few others.
+2) Download unix95.7.zip
+3) Unzip the file to a temporary directory (C:\temp is what we'll call it here)
+4) Move the files in C:\temp\32-bit\utils to somewhere in your path (C:\mingw32\bin,
+   for example) -- DO NOT overwrite any files already there.
+5) (optional) Move the files in C:\temp\32-bit to somewhere in your path (preferably
+   the same directory as in the previous step).

@@ -1,0 +1,9 @@
+Instructions for how to run sx3 on Win32
+Please see mingw32.txt for how to compile.
+
+1) Copy the files from the DLL directory to your windows system directory (either
+   C:\windows\system or c:\winnt\system32, depending on your operating system)
+2) Compile each module and run "make install", if you so desire (this has already
+   been done for you).
+3) cd to the sx3 directory and run sx3.exe.  It *must* be run out of the sx3 directory,
+   or it will not be able to find the necessary data files.

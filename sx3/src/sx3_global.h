@@ -99,7 +99,6 @@ SX3_ERROR_CODE sx3_get_global_float        (const char *var, float *value);
 SX3_ERROR_CODE sx3_get_global_char         (const char *var, char  *value);
 SX3_ERROR_CODE sx3_find_global_var         (const char *ss, char *var_name);
 
-SX3_ERROR_CODE sx3_read_config_file        (const char *filename);
 
 #ifdef __cplusplus
 }
