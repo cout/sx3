@@ -62,7 +62,7 @@ endif
 
 LDFLAGS+=-L$(PREFIX)/lib
 INCLUDES+=-I$(PREFIX)/include
-CFLAGS+=-DDEBUG -Wall -O3
+CFLAGS+=-DDEBUG -Wall -O3 -g
 
 CC=gcc
 AR=ar
