@@ -276,8 +276,8 @@ void init(const char *modelfile, const char *weaponfile, const char *skinfile) {
 
     glEnable(GL_DEPTH_TEST);
     glClearColor(0.0, 0.0, 0.0, 0.0);
-    // glShadeModel(GL_SMOOTH);
-    // glEnable(GL_SMOOTH);
+    glShadeModel(GL_SMOOTH);
+    glEnable(GL_SMOOTH);
     // glEnable(GL_POLYGON_SMOOTH);
 
     // Only draw one side of the polygons -- note the use of GL_CW.  This
