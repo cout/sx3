@@ -23,3 +23,5 @@ LIBS+=-lm $(GL_LIBS) $(SDL_LIBS)
 LDFLAGS+=$(GL_LDFLAGS) $(SDL_LDFLAGS)
 
 include ../build/makeinclude.macros
+
+install: libinstall

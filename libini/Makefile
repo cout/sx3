@@ -20,3 +20,5 @@ LIBS=
 LDFLAGS=
 
 include ../build/makeinclude.macros
+
+install: libinstall
