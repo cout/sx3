@@ -9,7 +9,7 @@
 
 static int number = 0;
 
-static void wire_text() {
+void wire_text() {
 	gltContext *g = gltNewContext();
 	int j;
 
@@ -44,7 +44,7 @@ static void bitmap_text(int f) {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	gltSelectBitmapFont(g, f);
+	gltSelectFont(g, f);
 	for(j = 0; j < 128; j++) {
 		gltBitmapChar(g, j);
 		if(j % 40 == 19) gltBitmapString(g, "\r\n");
@@ -57,32 +57,6 @@ static void bitmap_text(int f) {
 	gltFreeContext(g);
 }
 
-static void texture_text() {
-    int j;
-
-	gltContext *g = gltNewContext();
-    gltLoadTextureFont(g, "font.png");
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluOrtho2D(0, WIDTH, HEIGHT, 0);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	gltFontSize(g, 10, 10);
-
-	for(j = 0; j < 128; j++) {
-		gltTextureChar(g, j);
-		if(j % 40 == 19) gltTextureString(g, "\r\n");
-	}
-	gltTextureString(g, "\r\n\r\n");
-	gltTextureString(g, "The brown fox jumps over the lazy DOG!?!\r\n");
-	gltTextureString(g, "Now is the time for all good men\r\n");
-	gltTextureString(g, "to come to the aid of their country.\r\n");
-
-	gltFreeContext(g);
-}
-
 static void display(void) {
 	switch(number) {
 		case 0: wire_text(); break;
@@ -90,7 +64,6 @@ static void display(void) {
 		case 2: bitmap_text(GLT_TIMES); break;
 		case 3: bitmap_text(GLT_COURIER); break;
 		case 4: bitmap_text(GLT_FIXED); break;
-        case 5: texture_text(); break;
 	}
 	SDL_GL_SwapBuffers();
 }
@@ -104,7 +77,7 @@ void main_loop() {
 		switch(event.type) {
 			case SDL_KEYUP:
 				number++;
-				number %= 6;
+				number %= 5;
 				display();
 				break;
 			case SDL_QUIT:
