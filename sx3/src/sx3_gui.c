@@ -18,7 +18,7 @@
 
 // FIX ME!! For some reason, sx3_tanks.h must be included before gltext.h.
 // I would imagine that this is due to some odd macro in gltext.h.
-#include <gltext.h>
+#include "gltext.h"
 
 // ===========================================================================
 // Global variables

@@ -8,8 +8,8 @@
 #include <GL/glu.h>
 #include <SDL/SDL_endian.h>
 #include <assert.h>
-#include <md2.h>
-#include <textures.h>
+#include "md2.h"
+#include "textures.h"
 
 #define NUMVERTEXNORMALS 162
 static float avertexnormals[NUMVERTEXNORMALS][3] = {

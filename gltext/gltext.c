@@ -215,7 +215,8 @@ static void init_bitmap_font(gltContext *g, int font) {
         case GLT_HELVETICA: fontname = "Arial";    break;
         case GLT_TIMES:     fontname = "Times";    break;
         case GLT_COURIER:   fontname = "Courier";  break;
-        case GLT_FIXED:     fontname = "Terminal"; break;
+        case GLT_FIXED:     // fallthrough
+        default:            fontname = "Terminal"; break;
     }
     winfont = CreateFont(
         -CHAR_HEIGHT,               // 14-point character height
@@ -246,7 +247,8 @@ static void init_bitmap_font(gltContext *g, int font) {
         case GLT_COURIER:
             fontname = MKFONT("courier-medium-r-normal", BITMAP_CHAR_HEIGHT);
             break;
-        case GLT_FIXED:
+        case GLT_FIXED: // fallthrough
+        default:
             fontname = "fixed";
             break;
     }

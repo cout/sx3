@@ -4,9 +4,9 @@
 
 #include <GL/gl.h>
 #include <GL/glu.h>
-#include <textures.h>
 #include <string.h>
 #include <stdlib.h>
+#include "textures.h"
 #include "obj.h"
 
 #define MAX_VERTICES    2048
