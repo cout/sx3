@@ -8,7 +8,7 @@ MAINOUT=test
 
 SRC=$(MAINSRC) $(LIBSRC)
 OBJ=$(MAINOBJ) $(LIBOBJ)
-OUT=$(MAINOUT) $(LIBOUT)
+OUT=$(REALMAINOUT) $(LIBOUT)
 
 HEADERS=pglobal.h physics.h
 
