@@ -42,7 +42,7 @@ ifeq ($(COMSPEC),)
 	MKDIR_START=mkdir -p
 	MKDIR=
 
-  INSTALL=install -p
+	INSTALL=install -p
 else
 	REALMAINOUT=$(addsuffix .exe,$(MAINOUT))
 
@@ -57,7 +57,7 @@ else
 	MKDIR_START=if not exist
 	MKDIR=mkdir
 
-  INSTALL=install -p
+	INSTALL=install -p
 endif
 
 LDFLAGS+=-L$(PREFIX)/lib
@@ -108,7 +108,13 @@ makedepend:
 		touch $(DEPENDENCY_FILE))
 
 clean:
-	rm -f $(OBJ) $(OUT) core
+	rm -f $(OBJ) core
+
+realclean: clean
+	rm -f $(OUT)
+
+distclean: realclean depclean
+	rm -f *~
 
 depclean:
 	rm -f $(DEPENDENCY_FILE)
@@ -129,7 +135,7 @@ headerinstall:
 		$(MKDIR_START) $(INCDIR) $(MKDIR) $(INCDIR); \
 		$(INSTALL) $(HEADERS) $(INCDIR))
 
-install: libinstall headerinstall
+install: default libinstall headerinstall
 
 .PHONY: install libinstall headerinstall
 
@@ -137,28 +143,25 @@ install: libinstall headerinstall
 # Recursive rules
 # -----------------------------------------------------------------------------
 
-recurse_default:
-	$(foreach proj, $(SX3_DIRS), \
-		$(MAKE) -C $(proj) ; \
-		$(MAKE) -C $(proj) install &&) true
+RECURSE_RULES = default install dep depend clean realclean distclean depclean
+RECURSE_RECURSE_RULES = $(addprefix recurse_, $(RECURSE_RULES))
 
-recurse_install:
-	$(foreach proj, $(SX3_DIRS), $(MAKE) -C $(proj) install &&) true
+# Make rule foo depend on recurse_foo
+$(RECURSE_RULES): %: recurse_%
 
-recurse_clean:
-	$(foreach proj, $(SX3_DIRS), $(MAKE) -C $(proj) clean &&) true
+# Make rule recurse_foo depend on recurse_foo_dir1, recurse_foo_dir2, etc.
+$(RECURSE_RECURSE_RULES): %: $(foreach dir, $(SX3_DIRS), %.$(dir))
 
-recurse_dep:
-	$(foreach proj, $(SX3_DIRS), $(MAKE) -C $(proj) dep &&) true
+recurse_dirof = $(subst .,,$(suffix $(1)))
+recurse_ruleof = $(subst default,install,$(subst recurse_,,$(basename $(1))))
 
-default: recurse_default
+# Make rule recurse_foo.dir execute the command make -C dir foo
+# Note that there is a special case for the default rule, which executes
+# make -C dir install instead.
+$(foreach dir, $(SX3_DIRS), $(foreach rule, $(RECURSE_RECURSE_RULES), \
+		$(rule).$(dir))):
+	$(MAKE) -C $(call recurse_dirof, $@) $(call recurse_ruleof, $@)
 
-install: recurse_install
-
-clean: recurse_clean
-
-dep: recurse_dep
-
-.PHONY: default install clean dep
-.PHONY: recurse_default recurse_install recurse_clean recurse_dep
+.PHONY: $(RECURSE_RULES)
+.PHONY: $(RECURSE_RECURSE_RULES)
 
