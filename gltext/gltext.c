@@ -169,11 +169,57 @@ static const float verts[][2] = {
     {0.75, -0.375}
 };
 
-static void init_font(gltContext *g, int font) {
+#ifdef WIN32
+    static  PIXELFORMATDESCRIPTOR pfd =    
+        sizeof(PIXELFORMATDESCRIPTOR),      // Size of this structure
+        1,                                  // Version Number
+        PFD_DRAW_TO_WINDOW |                // Format Must Support Window
+        PFD_SUPPORT_OPENGL |                // Format Must Support OpenGL
+        PFD_DOUBLEBUFFER,                   // Must Support Double Buffering
+        PFD_TYPE_RGBA,                      // Request An RGBA Format
+        bits,                               // Select Our Color Depth
+        0, 0, 0, 0, 0, 0,                   // Color Bits Ignored
+        0,                                  // No Alpha Buffer
+        0,                                  // Shift Bit Ignored
+        0,                                  // No Accumulation Buffer
+        0, 0, 0, 0,                         // Accumulation Bits Ignored
+        16,                                 // 16Bit Z-Buffer (Depth Buffer)
+        0,                                  // No Stencil Buffer
+        0,                                  // No Auxiliary Buffer
+        PFD_MAIN_PLANE,                     // Main Drawing Layer
+        0,                                  // Reserved
+        0, 0, 0                             // Layer Masks Ignored
+    };
+#endif
+
+static void init_bitmap_font(gltContext *g, int font) {
     char * fontname;
 
     g->font_lists[font] = glGenLists(128);
 #ifdef WIN32
+    switch(font) {
+        case GLT_HELVETICA: fontname = "Arial";    break;
+        case GLT_TIMES:     fontname = "Times";    break;
+        case GLT_COURIER:   fontname = "Courier";  break;
+        case GLT_FIXED:     fontname = "Terminal"; break;
+    }
+    winfont = CreateFont(
+        -14,                        // 14-point character height
+        0,                          // default width
+        0,                          // 0 angle of escapement
+        0,                          // 0 orientation angle
+        FW_NORMAL,                  // normal font weight
+        FALSE,                      // not italic
+        FALSE,                      // not underline
+        FALSE,                      // not strikeout
+        ANSI_CHARSET,               // character set identifier
+        OUT_TT_PRECIS,              // prefer truetype fonts
+        CLIP_DEFAULT_PRECIS,        // default clipping
+        ANTIALIASED_QUALITY,        // antialiased if we can get it
+        FW_DONTCARE|DEFAULT_PITCH,  // default family and pitch
+        fontname);
+    selectObject(g->hDC, font);
+    wglUseFontBitmaps(g->hDC, 0, 127, g->font_lists[font]);
 #else
     switch(font) {
         case GLT_HELVETICA:
@@ -196,43 +242,86 @@ static void init_font(gltContext *g, int font) {
 #endif
 }
 
+static void close_glt() {
+    // TODO
+}
+
+#define INIT_ERROR_CHECK(x) \
+    do { \
+        if(!(x)) { \
+            close_glt(); \
+            return 0; \
+        } \
+    } while(0)
+
+static int init_glt(gltContext *g) {
+#ifdef WIN32
+    /*
+    g->hInstance = GetModuleHandle(NULL);
+    // TODO: We must register a wc before we can create a window.  This
+    // *should* already be done.  In fact, we might be able to get our hWnd
+    // from wgl or sdl.
+    g->hWnd = CreateWindowEx(
+        WS_EX_APPWINDOW,            // Extended Style For The Window
+        "OpenGL",                   // Class Name
+        "",                         // Window Title
+        WS_CLIPSIBLINGS |           // Required Window Style
+        WS_CLIPCHILDREN |           // Required Window Style
+        WS_POPUP,                   // Selected Window Style
+        0, 0,                       // Window Position
+        16, 16,
+        NULL,                       // No Parent Window
+        NULL,                       // No Menu
+        g->hInstance,               // Instance
+        NULL));                     // Don't Pass Anything To WM_CREATE
+    INIT_ERROR_CHECK(g->hWnd);
+    INIT_ERROR_CHECK(g->hDC = GetDC(g->hWnd));
+    INIT_ERROR_CHECK(PixelFormat = ChoosePixelFormat(g->hDC, &pfd));
+    INIT_ERROR_CHECK(g->PixelFormat);
+    INIT_ERROR_CHECK(SetPixelFormat(g->hDC, g->PixelFormat, &pfd));
+    INIT_ERROR_CHECK(g->hRC = wglCreateContext(g->hDC));
+    INIT_ERROR_CHECK(wglMakeCurrent(g->hDC, g->hRC));
+    */
+#else
+    g->display = (Display*)glXGetCurrentDisplay();
+    INIT_ERROR_CHECK(g->display);
+#endif
+    return 1;
+}
+
+// TODO: This function does very little error checking.
 gltContext* gltNewContext() {
     gltContext *g;
     int j;
 
     g = malloc(sizeof(gltContext));
-    if(!g) {
+    if(!g) return 0;
+
+    if(init_glt(g)) {
+        for(j = GLT_NONE + 1; j < GLT_MAX_FONTS; ++j) {
+            init_bitmap_font(g, j);
+        }
+    } else {
+        free(g);
         return 0;
     }
 
     g->x = 0;
     g->y = 0;
     g->in_draw = 0;
-
-#ifdef WIN32
-    /* We should use the wgl functions for win32 */
-#else
-    g->display = (Display*)glXGetCurrentDisplay();
-    if(g->display) {
-        for(j = GLT_NONE + 1; j < GLT_MAX_FONTS; ++j) {
-            init_font(g, j);
-        }
-    }
-#endif
-
     g->current_font = GLT_NONE;
+
     return g;
 }
 
 void gltFreeContext(gltContext *g) {
-    if(g) free(g);
-#ifdef WIN32
-    /* Some Win32 stuff should go here */
-#else
+    close_glt();
+
     glDeleteLists(g->font_lists[GLT_HELVETICA], 126);
     glDeleteLists(g->font_lists[GLT_TIMES], 126);
     glDeleteLists(g->font_lists[GLT_COURIER], 126);
-#endif
+
+    if(g) free(g);
 }
 
 void gltWireChar(gltContext *g, unsigned char c) {

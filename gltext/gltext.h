@@ -22,7 +22,14 @@ typedef struct {
 	int in_draw;
 	int font_lists[GLT_MAX_FONTS];
 	int current_font;
-#ifndef WIN32
+#ifdef WIN32
+    HGLRC hRC = NULL;
+    HDC hDC = NULL;
+    HWND hWnd = NULL;
+    HINSTANCE hInstance;
+    GLuint PixelFormat;
+    WNDCLASS wc;
+#else
 	Display* display;
 #endif
 } gltContext;
