@@ -1,7 +1,7 @@
 # Top-level Makefile for sx3
 # There must be a better way to do this!
 
-all: gfx_ gltext_ matrix_ physics_ ini_ utils_ ctl_ console_ sx3_
+all: ctl_ gfx_ gltext_ matrix_ physics_ ini_ utils_ console_ sx3_
 
 gfx_:
 	make -C gfx
