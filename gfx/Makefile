@@ -16,7 +16,7 @@ OUT=$(MAINOUT) $(LIBOUT)
 
 HEADERS=include/md2.h include/models.h include/textures.h
 
-INCLUDES=-Iinclude -I/usr/local/include
+INCLUDES+=-Iinclude -I/usr/local/include
 
 CFLAGS+=-g -O2 -Wall $(GL_CFLAGS) $(SDL_CFLAGS)
 LIBS+=-lm $(GL_LIBS) $(SDL_LIBS)
