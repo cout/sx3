@@ -1,4 +1,4 @@
-DEFAULT_PREFIX=../local
+DEFAULT_PREFIX  = ../local
 DEFAULT_BINDIR  = $(PREFIX)/bin
 DEFAULT_MANDIR  = $(PREFIX)/man
 DEFAULT_LIBDIR  = $(PREFIX)/lib
@@ -15,7 +15,6 @@ SECTION=$(DEFAULT_SECTION)
 ifneq ($(ComSpec),)
 	COMSPEC=$ComSpec
 endif
-
 
 ifeq ($(COMSPEC),)
 	REALMAINOUT=$(MAINOUT)
