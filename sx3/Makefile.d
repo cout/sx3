@@ -25,7 +25,8 @@ main.o: src/main.c /usr/include/SDL/SDL.h /usr/include/SDL/SDL_main.h \
  /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h \
  /usr/lib/gcc-lib/i586-mandrake-linux/2.95.3/include/float.h \
  /usr/include/bits/mathinline.h /usr/include/string.h \
- /usr/include/bits/string.h /usr/include/bits/string2.h src/sx3_misc.h \
+ /usr/include/bits/string.h /usr/include/bits/string2.h \
+ ../local/include/ini.h src/sx3_misc.h \
  /usr/lib/gcc-lib/i586-mandrake-linux/2.95.3/include/limits.h \
  /usr/lib/gcc-lib/i586-mandrake-linux/2.95.3/include/syslimits.h \
  /usr/include/limits.h /usr/include/bits/posix1_lim.h \
@@ -35,7 +36,7 @@ main.o: src/main.c /usr/include/SDL/SDL.h /usr/include/SDL/SDL_main.h \
  ../local/include/physics.h ../local/include/matrix.h \
  ../local/include/models.h ../local/include/md2.h src/sx3_weapons.h \
  src/sx3_graphics.h src/sx3_title.h src/sx3_math.h src/sx3_game.h \
- ../local/include/ini.h
+ src/sx3_files.h
 sx3_console.o: src/sx3_console.c /usr/X11R6/include/GL/gl.h \
  /usr/X11R6/include/GL/glext.h /usr/local/include/GL/glu.h \
  /usr/include/string.h /usr/include/features.h \
@@ -132,7 +133,7 @@ sx3_global.o: src/sx3_global.c /usr/include/string.h \
  /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h \
  /usr/include/bits/mathcalls.h \
  /usr/lib/gcc-lib/i586-mandrake-linux/2.95.3/include/float.h \
- /usr/include/bits/mathinline.h src/sx3_tanks.h \
+ /usr/include/bits/mathinline.h ../local/include/ini.h src/sx3_tanks.h \
  ../local/include/physics.h ../local/include/matrix.h \
  ../local/include/pglobal.h ../local/include/models.h \
  ../local/include/md2.h src/sx3_weapons.h src/sx3_graphics.h src/sx3.h \

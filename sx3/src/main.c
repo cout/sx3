@@ -17,13 +17,14 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <ini.h>
 #include "sx3_misc.h"
 #include "sx3_global.h"
 #include "sx3_tanks.h"
 #include "sx3_title.h"
 #include "sx3_math.h"
 #include "sx3_game.h"
-#include "ini.h"
+#include "sx3_files.h"
 
 CLEANUP_TYPE CleanUp(void)
 {
@@ -123,6 +124,14 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Unable to allocate CleanUp() function to exit list!\n"
             "EXITING...\n\n");
         return 1;
+    }
+
+    // Read the config file; command-line arguments will override anything
+    // in the config file.
+    if(sx3_read_config_file(SX3_GLOBAL_CONFIG_FILE) != SX3_ERROR_SUCCESS)
+    {
+        fprintf(stderr, "Unable to open config file %s\n",
+            SX3_GLOBAL_CONFIG_FILE);
     }
 
     // Parse the command line
