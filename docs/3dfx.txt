@@ -39,8 +39,14 @@ Mesa-demos).  Untar the two files, and run ./configure.  If you have an old
 CPU, then you may have pass --disable-3dnow to ./configure, since configure
 only checks to see if binutils has 3dnow support, rather than checking to
 see if your CPU actually supports 3dnow instructions.  Then run "make" (and
-"make check" if you installed the demos).  Run demos/glinfo, and you should
-see something like this for the GL_REDNERER:
+"make check" if you installed the demos).
+
+Next, you need to set an environment variable GLX_FX_MESA.  Use either export
+(if you use bash) or setenv (for csh) to do this.  Set it to "fullscreen" if
+you want fullscreen support, or "window" if you want to run in a window
+(which is slower).
+
+Run demos/glinfo, and you should see something like this for the GL_RENDERER:
 
 GL_RENDERER: Mesa Glide v0.30 Voodoo_Graphics 0 CARD/2 FB/2 TM/1 TMU/NOSLI
 
@@ -48,8 +54,20 @@ If you don't, then Mesa is in software mode, and you won't get very good
 performance (you can turn textures off and get about 2-3 fps on a 200MHz
 machine in Sx3).
 
-Lastly, run "make install" to install the GL libraries.  Be sure to run
-ldconfig, otherwise your GL apps won't be able to find libGL.so (the demos
-will still work, though, because they are staticly linked).
+Run "make install" to install the GL libraries.  Be sure to run ldconfig,
+otherwise your GL apps won't be able to find libGL.so (the demos will still
+work, though, because they are staticly linked).
 
-That's all (!) there is too it!
+Now, to squeeze out some extra performance from your card, set the following
+environment variables:
+    SST_FASTMEM=1
+    SST_PCIRD=1
+    SST_GRXCLK=57
+    SST_SWAP_EN_WAIT_ON_VIDSYNC=0
+
+If the image shows up too dardk (i.e. you have an old monitor), or if you want
+to get 800x600 mode, but the default refresh rate is too high, or if you want
+a better refresh rate, then set:
+    SST_SCREENREFRESH=60 (or whatever value you prefer)
+
+For more environment variables you can set, see the Mesa documentation.
