@@ -11,7 +11,9 @@ typedef char CTL_BOOL;
 #define TRUE (!FALSE)
 #endif
 
-#define CTL_COMPARISON_FUNCTION(type, name) CTL_BOOL (*name)(type, type)
+// Returns 0 for equal, -1 if lhs is less than rhs, and 1 if
+// lhs is greatre than rhs.
+#define CTL_COMPARISON_FUNCTION(type, name) int (*name)(type, type)
 
 #define CTL_BOOL_FIELD(field) int field:1
 

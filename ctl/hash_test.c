@@ -12,7 +12,7 @@ size_t string_hash(char **x) {
     }
 }
 
-CTL_BOOL string_comp(char **x, char **y) {
+int string_comp(char **x, char **y) {
     return strcmp(*x, *y);
 }
 

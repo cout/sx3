@@ -83,10 +83,11 @@
     CTL_ASSERT_SAME_TYPE(h.data->data->value, v); \
     ctl__hash_insert((CTL__Hash *)&h, &k, &v); \
 }
-#define HASH_FIND(h, key, comp, result) ( \
-    /* TODO */ \
+
+// TODO: I wish I could do some type-checking here.
+#define HASH_FIND(h, k, comp, result) ( \
     HASH_PARTIAL_TYPE_CHECK(h), \
-    ctl__hash_find((CTL__Hash *)&h, &key, (void *)comp, &result) \
+    ctl__hash_find((CTL__Hash *)&h, &k, (void *)comp, &result) \
 )
 
 #define HASH_IT_LT(it1, it2)        /* TODO */
