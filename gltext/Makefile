@@ -15,7 +15,7 @@ HEADERS=gltext.h
 INCLUDES=-I. -I../local/include
 
 CFLAGS=-g -Wall $(GL_CFLAGS) $(SDL_CFLAGS)
-LIBS=-lm $(GL_LIBS) $(SDL_LIBS)
+LIBS=-lm -lgfx $(GL_LIBS) $(SDL_LIBS)
 LDFLAGS=$(GL_LDFLAGS) $(SDL_LDFLAGS)
 
 include ../makeinclude.macros
