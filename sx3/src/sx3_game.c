@@ -5,7 +5,7 @@
 // and to perform the appropriate actions.  It will change the game mode
 // between animate and normal mode as necessary.
 
-#ifdef __MINGW32__
+#ifdef WIN32
 #include <windows.h>
 #endif
 
@@ -17,6 +17,7 @@
 #include <matrix.h>
 #include <physics.h>
 #include <pglobal.h>
+#include <sx3_registry.h>
 #include "sx3.h"
 #include "sx3_math.h"
 #include "sx3_game.h"
@@ -29,6 +30,8 @@
 #include "sx3_engine.h"
 #include "sx3_audio.h"
 #include "sx3_gui.h"
+#include <sx3_utils.h>
+
 
 // ===========================================================================
 // Global macros
@@ -47,8 +50,6 @@
 // Global variables
 // ===========================================================================
 
-float  frame_time = 0;      // Used to calculate frame rate
-int    total_frames = 0;
 int    current_window;
 
 // viewing angle/distance data
@@ -81,9 +82,85 @@ float turret_angle_mod = 0.0;
 // Color of scene fog
 GLfloat fog_color[] = {0.5F,0.5F,0.6F,1.0F};
 
+// View variables -----------------------------------------------------------
+float               g_fov                       = (float)M_PI/4;
+int                 g_sat_view_on               = 0;
+float               g_sat_altitude              = 1000.0;
+int                 g_view_radius               = 512;
+float               g_zoom_increment            = 3.0F;
+float               g_view_altitude             = 3.0F;
+int                 g_view_gravity              = 1;
+
+// Misc. display options ---------------------------------------------------
+int                 g_fog_type                  = 4;
+int                 g_display_frame_rate        = 1;
+
 // ===========================================================================
 // Functions definitions
 // ===========================================================================
+
+// game_register_vars
+//
+// Registers the global varaibles specific to the game module
+void sx3_game_register_vars (void)
+{
+    sx3_add_global_var ("view.fov",
+                        SX3_GLOBAL_FLOAT,
+                        0,
+                        (void*)&g_fov,
+                        0,
+                        NULL);
+    sx3_add_global_var ("view.satellite.enabled",
+                        SX3_GLOBAL_BOOL,
+                        0,
+                        &g_sat_view_on,
+                        0,
+                        NULL);
+    sx3_add_global_var ("view.satellite.altitude",
+                        SX3_GLOBAL_FLOAT,
+                        0,
+                        &g_sat_altitude,
+                        0,
+                        NULL);
+    sx3_add_global_var ("view.radius",
+                        SX3_GLOBAL_INT,
+                        0,
+                        &g_view_radius,
+                        0,
+                        NULL);
+    sx3_add_global_var ("view.speed",
+                        SX3_GLOBAL_FLOAT,
+                        0,
+                        &g_zoom_increment,
+                        0,
+                        NULL);
+    sx3_add_global_var ("view.altitude",
+                        SX3_GLOBAL_FLOAT,
+                        0,
+                        &g_view_altitude,
+                        0,
+                        NULL);
+    sx3_add_global_var ("view.gravity",
+                        SX3_GLOBAL_BOOL,
+                        0,
+                        &g_view_gravity,
+                        0,
+                        NULL);
+    sx3_add_global_var ("fog.type",
+                        SX3_GLOBAL_INT,
+                        0,
+                        &g_fog_type,
+                        0,
+                        NULL);
+    sx3_add_global_var ("frame_rate.enabled",
+                        SX3_GLOBAL_BOOL,
+                        0,
+                        &g_display_frame_rate,
+                        0,
+                        NULL);
+    return;
+}  // game_register_vars
+
 
 // init_game intializes our little demo game.
 void init_game()
@@ -92,6 +169,7 @@ void init_game()
     sx3_init_audio();
     sx3_init_gui();
     sx3_init_graphics();
+    sx3_console_init(SX3_DEFAULT_FONT_FILE);
 
     // Initialize terrain
     if (sx3_load_terrain(SX3_DEFAULT_TERRAIN,
@@ -267,7 +345,8 @@ void sx3_game_key_hit(SDLKey key, SDLMod mod, Uint8 state)
 
         case 'l':
             // Toggle lighting
-            g_terrain_lights = !g_terrain_lights;
+            // TODO: This should be fixed
+            // g_terrain_lights = !g_terrain_lights;
             break;
 
         case 'f':
@@ -283,7 +362,8 @@ void sx3_game_key_hit(SDLKey key, SDLMod mod, Uint8 state)
 
         case 'w':
             // Toggle wireframe mode
-            g_terrain_wire = !g_terrain_wire;
+            // TODO: This should be fixed
+            // g_terrain_wire = !g_terrain_wire;
             sx3_gl_settings();
             break;
 
@@ -350,13 +430,13 @@ void sx3_game()
     init_gl();
     reset_view();
 
-    console_print ("*** Sx3 project (pre-alpha) ***");
-    console_print ("");
-    console_print ("Console commands available:");
-    console_print ("  get <var name>");
-    console_print ("  set <var name> <var value>");
-    console_print ("  quit");
-    console_print ("");
+    sx3_console_print ("*** Sx3 project (pre-alpha) ***");
+    sx3_console_print ("");
+    sx3_console_print ("Console commands available:");
+    sx3_console_print ("  get <var name>");
+    sx3_console_print ("  set <var name> <var value>");
+    sx3_console_print ("  quit");
+    sx3_console_print ("");
 
     while(get_game_mode() != SX3_GAME_END)
     {
@@ -365,17 +445,21 @@ void sx3_game()
             switch(event.type)
             {
                 case SDL_KEYDOWN:
-                    sx3_console_process_input(event.key.keysym.unicode&0x7F);
-                    if (g_console_active)
+                    if(sx3_console_process_input(event.key.keysym.unicode&0x7F))
                     {
                         // Reset all the GL parameters if the user pressed
                         // return while in the console.
                         if (event.key.keysym.mod == SDLK_RETURN)
                             sx3_gl_settings();
-                        break;
                     }
-                    // FIX ME!! We should disable Unicode translation if
-                    // the console is not active.
+                    else
+                    {
+                        // FIX ME!! We should disable Unicode translation if
+                        // the console is not active.
+                        sx3_game_key_hit(event.key.keysym.sym,
+                            event.key.keysym.mod, event.key.state);
+                    }
+                    break;
                 case SDL_KEYUP:
                     sx3_game_key_hit(event.key.keysym.sym,
                         event.key.keysym.mod, event.key.state);
@@ -411,4 +495,12 @@ void sx3_game()
 
     close_game();
     return;
+}
+
+
+// Called by the console when it wants to signal to us to quit
+// TODO: We should give this to the console via a function pointer
+void console_quit(const char * p1, const char * p2)
+{
+    set_game_mode(SX3_GAME_END);
 }

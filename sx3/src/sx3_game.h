@@ -7,6 +7,7 @@
 #ifndef SX3_GAME_H
 #define SX3_GAME_H
 
-void sx3_game();
+void sx3_game(void);
+void sx3_game_register_vars(void);
 
 #endif
