@@ -149,20 +149,22 @@ SX3_ERROR_CODE sx3_update_screen(
     else
         gluLookAt(
               eye_point.x,
-              sx3_interpolated_terrain_height (eye_point.x, eye_point.z, 1) +
-                  g_sat_altitude,
+              sx3_interpolated_terrain_height (
+                  eye_point.x, eye_point.z, 1) + g_sat_altitude,
               eye_point.z,
               eye_point.x,
-              sx3_interpolated_terrain_height (eye_point.x, eye_point.z, 1),
+              sx3_interpolated_terrain_height (
+                  eye_point.x, eye_point.z, 1),
               eye_point.z,
               0.0, 0.0, -1.0 );
     
     // Draw the scene
-    if(g_terrain_lights)
-    {
+    // TODO
+    // if(g_terrain_lights)
+    // {
         sx3_draw_terrain_lights();
         glEnable(GL_LIGHTING);
-    }
+    // }
     glColor3f(1.0, 1.0, 1.0);
     sx3_draw_terrain(eye_point, view_dir, up_vector);
 
@@ -170,7 +172,7 @@ SX3_ERROR_CODE sx3_update_screen(
     sx3_draw_tanks();                          // Draw the tanks
     sx3_draw_projectiles();                    // Draw the projectiles
     sx3_draw_explosions();                     // Draw the explosions
-    sx3_draw_hud(dt);                          // Display the HUD
+    sx3_draw_hud(dt, 1);                       // Display the HUD (TODO)
     sx3_console_refresh_display ();            // Refresh the console
 
     return SX3_ERROR_SUCCESS;
@@ -179,6 +181,7 @@ SX3_ERROR_CODE sx3_update_screen(
 void sx3_gl_settings()
 {
     // Fog
+    /*
     switch (g_fog_type)
     {
         case 0:
@@ -204,11 +207,14 @@ void sx3_gl_settings()
             glEnable (GL_FOG);
             break;
     }
+    */
 
     // Wireframe
+    /*
     if (g_terrain_wire)
         glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
     else
+    */
         glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 
 }
