@@ -3,7 +3,7 @@
 //
 // Graphical user interface module.
 
-#ifdef __MINGW32__
+#ifdef WIN32
 #include <windows.h>
 #endif
 
@@ -88,7 +88,7 @@ SX3_ERROR_CODE sx3_display_text(char* s, enum sx3_font_types font)
 }
 
 // Warning!  This function not thread-safe!
-void sx3_draw_hud(float dt)
+void sx3_draw_hud(float dt, int display_frame_rate)
 {
     static char frame_text[32];
     static char s[32];
@@ -107,7 +107,7 @@ void sx3_draw_hud(float dt)
     glLoadIdentity();
 
     // spit out frame rate.
-    if(g_display_frame_rate)
+    if(display_frame_rate)
     {
         g_frame_time += dt;
 
