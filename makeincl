@@ -22,6 +22,9 @@ ifeq ($(COMSPEC),)
 	GL_CFLAGS=
 
 	LDFLAGS+=-L/usr/local/lib -L/usr/X11R6/lib
+
+	MKDIR_START=
+	MKDIR=mkdir -p
 else
 	REALMAINOUT=$(addsuffix exe,$(MAINOUT))
 
@@ -32,7 +35,9 @@ else
 	GL_LIBS=-lopengl32 -lglu32
 	GL_LDFLAGS=
 	GL_CFLAGS=
-	
+
+	MKDIR_START=if not exist
+	MKDIR=mkdir
 endif
 
 LDFLAGS+=-L$(PREFIX)/lib
@@ -59,9 +64,9 @@ $(LIBOUT): $(LIBOBJ)
 	$(AR) rc $@ $?
 
 libinstall:
-	mkdir -p $(LIBDIR)
+	$(MKDIR_START) $(LIBDIR) $(MKDIR) $(LIBDIR)
 	cp $(LIBOUT) $(LIBDIR)
-	mkdir -p $(INCDIR)
+	$(MKDIR_START) $(LIBDIR) $(MKDIR) $(INCDIR)
 	cp $(HEADERS) $(INCDIR)
 
 depend: dep
