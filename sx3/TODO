@@ -29,7 +29,6 @@ High priority:
 - Load some tank models.
 
 Med priority:
-- Add support for an ini file; perhaps this should be in xml?
 - Rewrite some of the code to use the sx3_global module.
 - Write some GUI code and user interface code.
 - Write code for an options menu and store menu.
@@ -56,6 +55,8 @@ Low priority:
 - Replace (most) #defines with static inline functions or with static const
   variables (static inline functions conform to C94; static const variables
   conform to C89).
+- The gltext library shouldn't use up texture memory or display lists for
+  fonts that aren't in use (or have never been used).
 
 Trivial:
 - Incorporate the gendir functionality into the program.
