@@ -23,6 +23,7 @@
 #include "sx3_title.h"
 #include "sx3_math.h"
 #include "sx3_game.h"
+#include "ini.h"
 
 CLEANUP_TYPE CleanUp(void)
 {
@@ -131,19 +132,21 @@ int main(int argc, char *argv[])
         {
             fullscreen = 1;
         }
-        else if(!strcmp("-g_view_radius",argv[i]))
+        else if(!strncmp("--", argv[i], 2))
         {
-            g_view_radius = atoi(argv[--argc,++i]);
-            if(g_view_radius<1)
+            char var[1024];
+            char val[1024];
+            ini_split_var_value(argv[1]+2, var, sizeof(var), val, sizeof(val));
+            printf("Setting %s to %s\n", var, val);
+            if(sx3_set_global_value(var, val))
             {
-                fprintf(stderr,"g_view_radius must be greater than 0.\n");
-                exit(1);
+                fprintf(stderr, "Unable to set variable %s\n", var);
             }
-        }
+        }            
         else
         {
             fprintf(stderr,"Unrecognized argument: %s\n",argv[i]);
-            fprintf(stderr,"SYNTAX:  %s [-huge] [-g_view_radius <integer>]\n", argv[0]);
+            fprintf(stderr,"SYNTAX:  %s [-huge] [--var=value] [--var=value] ...\n", argv[0]);
             exit(1);
         }
     }

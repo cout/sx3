@@ -34,7 +34,8 @@ main.o: src/main.c /usr/include/SDL/SDL.h /usr/include/SDL/SDL_main.h \
  ../local/include/pglobal.h src/sx3.h src/sx3_errors.h src/sx3_tanks.h \
  ../local/include/physics.h ../local/include/matrix.h \
  ../local/include/models.h ../local/include/md2.h src/sx3_weapons.h \
- src/sx3_graphics.h src/sx3_title.h src/sx3_math.h src/sx3_game.h
+ src/sx3_graphics.h src/sx3_title.h src/sx3_math.h src/sx3_game.h \
+ ../local/include/ini.h
 sx3_console.o: src/sx3_console.c /usr/X11R6/include/GL/gl.h \
  /usr/X11R6/include/GL/glext.h /usr/local/include/GL/glu.h \
  /usr/include/string.h /usr/include/features.h \
