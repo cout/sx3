@@ -11,6 +11,10 @@ MAINSRC=$(foreach file, $(SRC1), $(SRCDIR)/$(file))
 MAINOBJ=$(SRC:.c=.o)
 MAINOUT=sx3
 
+SRC=$(MAINSRC)
+OBJ=$(MAINOBJ)
+OUT=$(MAINOUT)
+
 CFLAGS+=-g -O3 -Wall $(GL_CFLAGS) $(SDL_CFLAGS)
 LDFLAGS+=$(GL_LDFLAGS) $(SDL_LDFLAGS)
 LIBS+=-lm -lgfx -lphysics -lini $(GL_LIBS) $(SDL_LIBS)
