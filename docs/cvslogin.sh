@@ -1,8 +1,5 @@
 #!/bin/sh
 
-echo "Please be sure to run this program as \"source cvslogin <username>\","
-echo "otherwise your environment variables may not be set correctly."
-
 if [ "$1" == "" ]; then
 
   echo "Usage: cvslogin <username>"
