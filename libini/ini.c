@@ -25,7 +25,7 @@ typedef struct {
 #define LIBINI
 #include "ini.h"
 
-INI_Context* ini_new_context() {
+INI_Context* ini_new_context(void) {
     INI_Context *new_context = malloc(sizeof(INI_Context));
     new_context->first_section = NULL;
     return new_context;
@@ -149,22 +149,6 @@ const char *ini_get_value(
     }
 
     return NULL;
-}
-
-void ini_get_value_with_default(
-    INI_Context *ini,
-    const char *section,
-    const char *var,
-    const char *default_val,
-    char *result,
-    int result_len) {
-
-    const char *val;
-    if((val = ini_get_value(ini, section, var)) != INI_OK) {
-        strncpy(result, val, result_len);
-    } else {
-        strncpy(result, default_val, result_len);
-    }
 }
 
 void ini_split_var_value(
