@@ -289,7 +289,6 @@ static int init_glt(gltContext *g) {
     return 1;
 }
 
-// TODO: This function does very little error checking.
 gltContext* gltNewContext() {
     gltContext *g;
     int j;
