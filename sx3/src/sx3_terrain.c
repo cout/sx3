@@ -8,6 +8,10 @@
 //   terrain matrix.  The rest of the file is composed of X*Y number of
 //   WORD integers.  Each word represents the height for that coordinate.
 
+#ifdef WIN32
+#include <windows.h>
+#endif
+
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <SDL/SDL.h>
