@@ -69,8 +69,6 @@
 
 #define CTL_ASSERT(x) CTL_ASSERT_IO(x, stderr)
 
-#define CTL_UNUSED_ARG(x) if(&x);
-
 CTL_INLINE int ctl_null_function_call(void) { return 0; }
 
 #define CTL_ASSERT_EXISTS(x) (x ? ctl_null_function_call() : 0)
