@@ -206,9 +206,10 @@ sx3_tanks.o: src/sx3_tanks.c /usr/include/stdlib.h \
  /usr/include/bits/sigset.h /usr/include/sys/sysmacros.h \
  /usr/include/alloca.h /usr/include/string.h \
  /usr/include/bits/string.h /usr/include/bits/string2.h \
- src/sx3_tanks.h ../local/include/physics.h ../local/include/matrix.h \
- /usr/include/math.h /usr/include/bits/huge_val.h \
- /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h \
+ ../local/include/ini.h src/sx3_tanks.h ../local/include/physics.h \
+ ../local/include/matrix.h /usr/include/math.h \
+ /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h \
+ /usr/include/bits/mathcalls.h \
  /usr/lib/gcc-lib/i586-mandrake-linux/2.95.3/include/float.h \
  /usr/include/bits/mathinline.h ../local/include/pglobal.h \
  ../local/include/models.h ../local/include/md2.h /usr/include/stdio.h \
