@@ -329,6 +329,7 @@ void main_loop() {
         // call our idle function.  This allows for a slightly more versatile
         // event handler than with a callback-based approach, as with GLUT.
         if(!SDL_WaitEvent(&event)) continue;
+event_switch:
         switch(event.type) {
             case SDL_MOUSEBUTTONDOWN:
             case SDL_MOUSEBUTTONUP:
@@ -343,8 +344,11 @@ void main_loop() {
                     retval = SDL_PollEvent(&event);
                 } while(retval != 0 && event.type == SDL_MOUSEMOTION);
                 if(retval != 0) {
-                    SDL_PushEvent(&event);
-                    event = prev_event;
+                    // SDL_PushEvent(&event);
+                    // event = prev_event;
+                    mouse_motion(prev_event.motion.state,
+                        prev_event.motion.x, prev_event.motion.y);
+                    goto event_switch;
                 }
                 mouse_motion(event.motion.state,
                     event.motion.x, event.motion.y);
