@@ -1,0 +1,62 @@
+This is a to do list for the Sx3 project.  Always grep for "FIX ME" and
+"BUGBUG" in the sources.  Here's a list of other items that aren't addressed
+elsewhere.
+
+BUGS:
+- The projectile being fired ALWAYS impacts with the shield.
+- We don't tally up the damage until the end of the round.  This makes it difficult
+  to determine which tank died first.
+
+Optimizations:
+- Break up the sx3_draw_terrain function so that it can be better profiled.
+- Can we reduce the number of calls to glEnd/glBegin in sx3_draw_terrain?
+- Should we be calling sx3_interpolated_terrain_point on every iteration of
+  sx3_draw_terrain?  a) it seems as if this call is superfluous, and b) it seems
+  that finding gl_norm before we need it is unnecessary.
+- Use a vertex array; this reduces the number of vertices which the graphics card
+  must juggle.  If not a vertex array, then please cache the return values from
+  calculate_vertex_color et. al. so we can use them in the next iteration through
+  the loop.
+- Why recalculate temp_point and current_view_dir for every detail level?
+- Use a display list for drawing the explosions.
+
+High priority:
+- Fire the projectiles from the correct angle, position, and power.
+- Deform the terrain when an explosion hits.
+- Write code for drawing and handling explosions and flightpaths for various
+  projectile types.
+- Get some tank models finished and textured.
+- Load some tank models.
+
+Med priority:
+- Rewrite some of the code to use the sx3_global module.
+- Write some GUI code and user interface code.
+- Write code for an options menu and store menu.
+- Allow the tanks to move around on the terrain.
+- Use different viewpoints than what we currently have (which is klunky).
+
+Low priority:
+- Make terrain detail dependant on the distance the mouse moved.
+- Write a function for generating terrain and incorporate it into the main program.
+- Merge sx3_math.h with matrix.h, for uniformity.
+- Move the console and terrain functions into separate libraries.
+- Create a new title screen (that's not our tank).
+- Draw water and sky.
+- Create terrain textures (grass, snow, etc.)
+- Generate our own sound effects (currently from www.sfx-gallery.co.uk).
+- Compress our sound files (they are VERY big!)
+- Play sounds during the flight of a projectile.
+- Clean up the OpenGL code (specifically, write ONE routine for lighting).
+- Use int instead of long int, where appropriate.
+- Use float instead of double, where appropriate.
+- Draw the explosions more creatively (and faster, since the current method entails
+  about a 10fps hit).
+- Connect detail levels in the terrain engine better (right now we see "spots").
+- Replace (most) #defines with static inline functions or with static const
+  variables (static inline functions conform to C94; static const variables
+  conform to C89).
+
+Trivial:
+- Incorporate the gendir functionality into the program.
+- Incorporate Marc's new console code and error handling code into the program.
+
