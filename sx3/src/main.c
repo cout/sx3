@@ -106,6 +106,7 @@ void set_gl_mode(int fullscreen)
     exit(1);
 }
 
+#ifdef WIN32
 int APIENTRY WinMain(HINSTANCE hInstance,
                      HINSTANCE hPrevInstance,
                      LPSTR     lpCmdLine,
@@ -113,6 +114,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 {
     return main(_argc, _argv);
 }
+#endif
 
 int main(int argc, char *argv[])
 {
