@@ -26,7 +26,7 @@ ifeq ($(COMSPEC),)
 	MKDIR_START=
 	MKDIR=mkdir -p
 else
-	REALMAINOUT=$(addsuffix exe,$(MAINOUT))
+	REALMAINOUT=$(addsuffix .exe,$(MAINOUT))
 
 	SDL_LIBS=-lSDL -lSDL_image
 	SDL_LDFLAGS=
