@@ -49,7 +49,7 @@ typedef struct {
 extern "C" {
 #endif
 
-gltContext* gltNewContext();
+gltContext* gltNewContext(void);
 void gltFreeContext(gltContext* g);
 
 void gltFontSize(gltContext *g, float x, float y);
