@@ -14,12 +14,9 @@ HEADERS=gltext.h
 
 INCLUDES=-I. -I../local/include
 
-CFLAGS=-g -Wall `sdl-config --cflags`
-CC=gcc
-AR=ar
-
-LIBS=-lm -lGL -lGLU
-LDFLAGS=-L/usr/X11R6/lib `sdl-config --libs`
+CFLAGS=-g -Wall $(GL_CFLAGS) $(SDL_CFLAGS)
+LIBS=-lm $(GL_LIBS) $(SDL_LIBS)
+LDFLAGS=$(GL_LDFLAGS) $(SDL_LDFLAGS)
 
 include ../build/makeinclude.macros
 
