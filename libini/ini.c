@@ -151,6 +151,22 @@ const char *ini_get_value(
     return NULL;
 }
 
+void ini_get_value_with_default(
+    INI_Context *ini,
+    const char *section,
+    const char *var,
+    const char *default_val,
+    char *result,
+    int result_len) {
+
+    const char *val;
+    if((val = ini_get_value(ini, section, var)) != INI_OK) {
+        strncpy(result, val, result_len);
+    } else {
+        strncpy(result, default_val, result_len);
+    }
+}
+
 void ini_split_var_value(
     const char *string,
     char *var, int var_len,
@@ -191,4 +207,4 @@ void ini_split_var_value(
     // Null-terminate
     *val = 0;
 }
-    
+

@@ -21,6 +21,14 @@ const char *ini_get_value(
     const char *section,
     const char *var);
     
+void ini_get_value_with_default(
+    INI_Context *ini,
+    const char *section,
+    const char *var,
+    const char *default_val,
+    char *result,
+    int result_len);
+
 void ini_split_var_value(
     const char *string,
     char *var, int var_len,
