@@ -1,0 +1,55 @@
+How to get the 3DFX Voodoo card to work under Linux
+
+Note: If you have RedHat or Mandrake and a Voodoo3 or better, then you should
+be able to just install the RPMs for your system; Mesa will handle the rest.
+I don't know if a Voodoo2 will work out of the box; Mandrake comes with RPMs
+for it, but Mesa doesn't seem to have support compiled in for glide2x.
+
+First, go to http://pelit.saunalahti.fi/telenation/linuxgames/3dfx/ and get
+the latest Device3Dfx SRPM and Glide_SDK RPM.  Also grab the correct glide
+for your video card (Glide_VG for Voodoo Graphics, Glide_VR for Voodoo Rush,
+Glide_V2 for Voodoo2, etc.).  If you want DRI (Voodoo3 or later), then either
+upgrade to a new kernel and compile the tdfx module, or grab the tdfx module
+here and install it.  You shouldn't need the X servers here unless you have
+a Voodoo Rush.
+
+Next, compile the Device3Dfx SRPM.  You may be able to use the --rebuild
+option with rpm to install this, but I have not had much luck doing this.
+I recommend that you install the RPM as you would a normal RPM, then cd to
+/usr/src/xxx/SOURCES, where xxx is the directory where SRPMS are usually
+unpacked (redhat on RedHat, RPM on Mandrake).  Then, untar Device3Dfx.tar.bz2
+with tar xvfI Device3Dfx.tar.bz2.  Change directory to the Device3Dfx
+directory, and run make and then make install.  This will modify
+/etc/conf.modules, which is not a good thing, since new distributions use
+modules.conf instead.  You will have to make the change by hand.  Also note
+that you will need to repeat this entire step any time you upgrade to a new
+kernel.
+
+You should now be able to install Glide and the Glide SDK.  Simply rpm -Uvh
+the Glide_Vx and Glide_SDK rpms.  If you have a Voodoo2, Voodoo Rush, or
+Voodoo Graphics, then you will probably want to delete or rename
+/usr/include/glide3 and /usr/lib/libglide3*.so* since Mesa won't compile
+properly otherwise.
+
+If you've gotten this far, then run test3Dfx to make sure your card works.
+If it doesn't work, then you will have a hard time getting much further.
+
+Now, go to www.mesa3d.org and download the latest Mesa (and, optionally,
+Mesa-demos).  Untar the two files, and run ./configure.  If you have an old
+CPU, then you may have pass --disable-3dnow to ./configure, since configure
+only checks to see if binutils has 3dnow support, rather than checking to
+see if your CPU actually supports 3dnow instructions.  Then run "make" (and
+"make check" if you installed the demos).  Run demos/glinfo, and you should
+see something like this for the GL_REDNERER:
+
+GL_RENDERER: Mesa Glide v0.30 Voodoo_Graphics 0 CARD/2 FB/2 TM/1 TMU/NOSLI
+
+If you don't, then Mesa is in software mode, and you won't get very good
+performance (you can turn textures off and get about 2-3 fps on a 200MHz
+machine in Sx3).
+
+Lastly, run "make install" to install the GL libraries.  Be sure to run
+ldconfig, otherwise your GL apps won't be able to find libGL.so (the demos
+will still work, though, because they are staticly linked).
+
+That's all (!) there is too it!
