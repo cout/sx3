@@ -7,7 +7,8 @@ if [ "$1" == "" ]; then
 else
 
   CVS_RSH=ssh
-  CVSROOT=:ext:$1@sx3.dhs.org:/cvs/sx3
+  #CVSROOT=:ext:$1@sx3.dhs.org:/cvs/sx3
+  CVSROOT=:ext:$1@sx3.dhs.org:/cvs
 
   export CVS_RSH CVSROOT
 
