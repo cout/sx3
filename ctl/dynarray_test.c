@@ -14,7 +14,7 @@ int main() {
   DYNARRAY_PUSH_BACK_IMM(da, int, 20);
   DYNARRAY_PUSH_BACK_IMM(da, int, 30);
 
-  FOR_EACH(DYNARRAY, int, DYNARRAY_BEGIN(da), DYNARRAY_END(da), do_print);
+  FOR_EACH(DYNARRAY, int, DYNARRAY_BEGIN(da), DYNARRAY_END(da), do_print(it));
 
   DYNARRAY_FREE(da);
 

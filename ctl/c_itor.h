@@ -58,4 +58,13 @@
 #define STACK_ARRAY_IT_EQ(it1, it2)   ((it1) == (it2))
 #define STACK_ARRAY_GET(it)           (*it)
 
+// There are also some generic macros for making iterator operations cleaner:
+#define IT_TYPE(ctype, dtype)         ctype##_IT(dtype)
+#define IT_BEGIN(ctype, container)    ctype##_BEGIN(container)
+#define IT_END(ctype, container)      ctype##_END(container)
+#define IT_INC(ctype, it)             ctype##_IT_INC(it)
+#define IT_LT(ctype, it1, it2)        ctype##_IT_LT(it1, it2)
+#define IT_EQ(ctype, it1, it2)        ctype##_IT_EQ(it1, it2)
+#define IT_GET(ctype, it)             ctype##_IT_GET(it)
+
 #endif // CTL__C_ITOR_H

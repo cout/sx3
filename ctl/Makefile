@@ -16,12 +16,15 @@ all: dynarray_test itor_test hash_test
 
 %_test: %_test.c
 
+clean: testclean
+
+testclean:
+	rm -f *_test *_test.o
+
 foo:
 	echo $(DEFAULT_INCDIR)
 	echo $(INCDIR)
 
 include ../makeinclude.macros
-
-install: headerinstall
 
 INCDIR=$(addsuffix /ctl, $(DEFAULT_INCDIR))
