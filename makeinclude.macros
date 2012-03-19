@@ -74,8 +74,9 @@ AR=ar
 # Set SX3_ROOT in your environment if this is not done correctly.
 # -----------------------------------------------------------------------------
 
-CVS_REPOSITORY?=$(shell cat CVS/Repository)
-SX3_ROOT?=$(subst $(CVS_REPOSITORY),,$(CURDIR))sx3
+# CVS_REPOSITORY?=$(shell cat CVS/Repository)
+# SX3_ROOT?=$(subst $(CVS_REPOSITORY),,$(CURDIR))sx3
+SX3_ROOT:=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 
 # -----------------------------------------------------------------------------
 # Build rules
