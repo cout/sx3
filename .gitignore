@@ -1,0 +1,8 @@
+*.d
+*.o
+lib*.a
+gfx/test
+libini/test
+physics/test
+sx3/sx3
+local
