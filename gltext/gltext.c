@@ -21,7 +21,7 @@
 #define BITMAP_CELL_HEIGHT 14
 
 #define MKSTR(x) #x
-#define MKFONT(name, size) "*" ## name ## "--" ## MKSTR(size) ## "*"
+#define MKFONT(name, size) "*" MKSTR(name) "--" MKSTR(size) "*"
 
 static const int alphabet[][20] = {
     { GLT_END },                                                        // 0
@@ -239,13 +239,13 @@ static void init_bitmap_font(gltContext *g, int font) {
 #else
     switch(font) {
         case GLT_HELVETICA:
-            fontname = MKFONT("helvetica-medium-r-normal", BITMAP_CHAR_HEIGHT);
+            fontname = MKFONT(helvetica-medium-r-normal, BITMAP_CHAR_HEIGHT);
             break;
         case GLT_TIMES:
-            fontname = MKFONT("times-medium-r-normal", BITMAP_CHAR_HEIGHT);
+            fontname = MKFONT(times-medium-r-normal, BITMAP_CHAR_HEIGHT);
             break;
         case GLT_COURIER:
-            fontname = MKFONT("courier-medium-r-normal", BITMAP_CHAR_HEIGHT);
+            fontname = MKFONT(courier-medium-r-normal, BITMAP_CHAR_HEIGHT);
             break;
         case GLT_FIXED: // fallthrough
         default:
