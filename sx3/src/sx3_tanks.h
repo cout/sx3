@@ -109,7 +109,7 @@ struct Tank {
     struct Tank_Stats            s;
     struct Tank_Equipment        equipment;
     struct Tank_Abilities        abilities;
-    unsigned char                name[64];
+    char                         name[64];
     enum Shield_Type             active_shield;
     long int                     experience;
     long int                     level;
