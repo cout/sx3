@@ -53,7 +53,7 @@ int parse_obj_fp(FILE *fp, const char *skin, model_t *model) {
 
     // A very simple object file loader -- we don't even do textures!
     for(;;) {
-        fgets(buf, sizeof(buf), fp);
+        if(fgets(buf, sizeof(buf), fp) == NULL) break;
         if(feof(fp)) break;
 
         cmd = STRTOK_R(buf, " \t", &endptr);
