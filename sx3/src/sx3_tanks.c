@@ -176,6 +176,8 @@ SX3_ERROR_CODE sx3_load_tank_model(const char *f, struct Tank_Model *m)
 {
     const char *val;
 
+    printf("Loading tank from file %s\n", f);
+
     INI_Context *ini = ini_new_context();
     if(ini_load_config_file(ini, f) != INI_OK)
     {
