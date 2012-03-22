@@ -400,7 +400,7 @@ void sx3_game_key_hit(SDLKey key, SDLMod mod, Uint8 state)
 // sx3_game_mouse_motion processes the mouse input when the mouse is moved
 void sx3_game_mouse_motion(Uint8 state, int x, int y, int xrel, int yrel)
 {
-    if ((state&SDL_BUTTON_LMASK&SDL_BUTTON_RMASK) || (state&SDL_BUTTON_MMASK))
+    if (state&SDL_BUTTON_LMASK)
     {
         // We have right and left mouse button drag or middle button drag!
         current_xy_angle -= ((float)(yrel)/g_window_size.y)*(float)M_PI;
