@@ -59,7 +59,7 @@ float            z = 100.0, z0 = 100.0;
 
 model_t          model;
 model_t          weapon_model;
-int              mousex, mousey, x0, y0;
+int              mousex, mousey, mousex0, mousey0;
 
 /* Animation globals */
 int              currentFrame = 0;
@@ -119,7 +119,7 @@ void display(void) {
 // the parameters, but we will let C handle the conversions.
 void mouse_button(int button, int state, int x, int y) {
     if(state==SDL_PRESSED) {
-        x0 = x; y0 = y; theta0 = theta; phi0 = phi; z0 = z;
+        mousex0 = x; mousey0 = y; theta0 = theta; phi0 = phi; z0 = z;
         if(button&SDL_BUTTON_LMASK) action |= ZOOM;
         if(button&SDL_BUTTON_MMASK) action |= ROTATE;
     } else if(state==SDL_RELEASED) {
@@ -133,13 +133,13 @@ void mouse_button(int button, int state, int x, int y) {
 void mouse_motion(int state, int x, int y) {
     mousex = x; mousey = y;
     if(action & ZOOM) {
-        z = z0 + ZOOM_INC * (mousey - y0);
+        z = z0 + ZOOM_INC * (mousey - mousey0);
         eye[2] = z;
-        theta = theta0 + ROTATE_INC * (mousex - x0);
+        theta = theta0 + ROTATE_INC * (mousex - mousex0);
         display();
     } else if(action & ROTATE) {
-        theta = theta0 + ROTATE_INC * (mousex - x0);
-        phi = phi0 + ROTATE_INC * (mousey - y0);
+        theta = theta0 + ROTATE_INC * (mousex - mousex0);
+        phi = phi0 + ROTATE_INC * (mousey - mousey0);
         display();
     }
 }
