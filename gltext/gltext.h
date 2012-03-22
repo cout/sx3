@@ -54,16 +54,16 @@ void gltFreeContext(gltContext* g);
 
 void gltFontSize(gltContext *g, float x, float y);
 
-void gltWireChar(gltContext* g, unsigned char c);
-void gltWireString(gltContext* g, const unsigned char* s);
+void gltWireChar(gltContext* g, char c);
+void gltWireString(gltContext* g, const char* s);
 
-void gltBitmapChar(gltContext* g, unsigned char c);
+void gltBitmapChar(gltContext* g, char c);
 void gltSelectBitmapFont(gltContext* g, int font);
-void gltBitmapString(gltContext* g, const unsigned char* s);
+void gltBitmapString(gltContext* g, const char* s);
 
 void gltLoadTextureFont(gltContext* g, const char *filename);
-void gltTextureChar(gltContext* g, unsigned char c);
-void gltTextureString(gltContext* g, const unsigned char* s);
+void gltTextureChar(gltContext* g, char c);
+void gltTextureString(gltContext* g, const char* s);
 
 #ifdef __cplusplus
 }

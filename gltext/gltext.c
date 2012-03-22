@@ -4,6 +4,8 @@
 
 #include <stdlib.h>
 #include <textures.h>
+#include <string.h>
+
 #include "gltext.h"
 
 // ---------------------------------------------------------------------------
@@ -347,13 +349,13 @@ void gltFreeContext(gltContext *g) {
 // Wireframe fonts
 // ---------------------------------------------------------------------------
 
-void gltWireChar(gltContext *g, unsigned char c) {
+void gltWireChar(gltContext *g, char c) {
     const int *i;
 
     if(c > 128) return;
 
     glBegin(GL_LINE_STRIP);
-    for(i = alphabet[c]; *i != GLT_END; i++) {
+    for(i = alphabet[(unsigned char)c]; *i != GLT_END; i++) {
         switch(*i) {
             case GLT_DOT:
                 glEnd();
@@ -396,7 +398,7 @@ void gltWireChar(gltContext *g, unsigned char c) {
     g->x += g->font_x * 1.0;
 }
 
-void gltWireString(gltContext *g, const unsigned char *s) {
+void gltWireString(gltContext *g, const char *s) {
     g->in_draw = 1;
     for(; *s != 0; s++) {
         gltWireChar(g, *s);
@@ -431,7 +433,7 @@ static void update_coords(gltContext *g) {
     g->y = y - BITMAP_CELL_HEIGHT;
 }
 
-void gltBitmapChar(gltContext *g, unsigned char c) {
+void gltBitmapChar(gltContext *g, char c) {
     switch(c) {
         case '\0':
             break;
@@ -449,16 +451,15 @@ void gltBitmapChar(gltContext *g, unsigned char c) {
     }
 }
 
-static const unsigned char* strfind(const unsigned char *s,
-        const unsigned char *c) {
-    const unsigned char *t;
+static const char* strfind(const char *s, const char *c) {
+    const char *t;
     for(; *s != 0; s++) {    
         for(t = c; *t != 0; t++) if(*s == *t) return s;
     }
     return NULL;
 }
 
-void gltBitmapList(gltContext* g, const unsigned char* s, int n) {
+void gltBitmapList(gltContext* g, const char* s, int n) {
     if (n > 0) {
         glRasterPos2f(g->x, g->y + BITMAP_CELL_HEIGHT);
         glListBase(g->font_lists[g->current_bitmap_font]);
@@ -467,10 +468,10 @@ void gltBitmapList(gltContext* g, const unsigned char* s, int n) {
     }
 }
     
-void gltBitmapString(gltContext* g, const unsigned char* s) {
-    const unsigned char *substr;
+void gltBitmapString(gltContext* g, const char* s) {
+    const char *substr;
     if((substr = strfind(s, "\r\n"))) {
-        unsigned char c = *substr;
+        char c = *substr;
         gltBitmapList(g, s, substr - s);
         gltBitmapChar(g, c);
         gltBitmapString(g, substr + 1);
@@ -490,7 +491,7 @@ void gltLoadTextureFont(gltContext *g, const char *filename) {
     g->texture_font = bind_tex(filename, 0);
 }
 
-void gltTextureChar(gltContext *g, unsigned char c) {
+void gltTextureChar(gltContext *g, char c) {
     if(!g->texture_font) return;
 
     switch(c) {
@@ -527,7 +528,7 @@ void gltTextureChar(gltContext *g, unsigned char c) {
     }
 }
 
-void gltTextureString(gltContext *g, const unsigned char *s) {
+void gltTextureString(gltContext *g, const char *s) {
     for(; *s != 0; ++s) gltTextureChar(g, *s);
 }
 
