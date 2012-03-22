@@ -1,19 +1,21 @@
-# Tank definition file for the Dalek
-Model		None
-ModelTex	None
+[Tank]
+Model=None
+Texture=None
+Scale=1.0 1.0 1.0
+Trans=0.0 0.0 0.0
+Rotate=0.0 0.0 0.0 0.0
 
-Turret		data/tanks/dalek/tris.md2
-TurretTex	data/tanks/dalek/dalek.pcx
-TurretBase	0.0 0.0 0.0
-TurretTrans	0.0 0.0 0.0
-TurretRot	0.0 0.0 0.0 0.0
+[Turret]
+Model=data/tanks/dalek/tris.md2
+Texture=data/tanks/dalek/dalek.pcx
+Base=0.0 0.0 0.0
+Trans=0.0 0.0 0.0
+Rotate=0.0 0.0 0.0 0.0
 
-Weapon		data/tanks/dalek/weapon.md2
-WeaponTex	data/tanks/dalek/weapon.pcx
-WeaponBase	0.0 20.0 5.0
-WeaponTrans	0.0 0.0 0.0
-WeaponRot	0.0 0.0 0.0 0.0
+[Weapon]
+Model=data/tanks/dalek/weapon.md2
+Texture=data/tanks/dalek/weapon.pcx
+Base=0.0 20.0 5.0
+Trans=0.0 0.0 0.0
+Rotate=0.0 0.0 0.0 0.0
 
-Scale		1.0 1.0 1.0
-Trans		0.0 0.0 0.0
-Rotate		0.0 0.0 0.0 0.0
