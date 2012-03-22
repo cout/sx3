@@ -254,8 +254,17 @@ SX3_ERROR_CODE sx3_load_terrain(
     }
 
     // Read the size of the terrain
-    fread(&terrain_width,2,1,inFile);
-    fread(&terrain_height,2,1,inFile);
+    if (fread(&terrain_width,2,1,inFile) == 0)
+    {
+      printf ("Unable to read width from terrain file: %s\n", terrainName);
+      return SX3_ERROR_BAD_FILE;
+    }
+
+    if (fread(&terrain_height,2,1,inFile) == 0)
+    {
+      printf ("Unable to read height from terrain file: %s\n", terrainName);
+      return SX3_ERROR_BAD_FILE;
+    }
 
     if(SDL_BYTEORDER == SDL_BIG_ENDIAN) {
         terrainSize->x = SDL_Swap16(terrain_width);
@@ -267,7 +276,13 @@ SX3_ERROR_CODE sx3_load_terrain(
 
     printf("Loading the terrain\n");
     tmpbuf = origbuf = malloc(terrainSize->x*terrainSize->y*2);
-    fread(tmpbuf, 2, terrainSize->x*terrainSize->y, inFile);
+
+    if (fread(tmpbuf, 2, terrainSize->x*terrainSize->y, inFile) == 0)
+    {
+      printf ("Unable to read terrain data from file: %s\n", terrainName);
+      return SX3_ERROR_BAD_FILE;
+    }
+
     mapPtr = buffer;
     for (j=0; j<terrainSize->y; j++) {
         for (i=0; i<terrainSize->x; i++) {

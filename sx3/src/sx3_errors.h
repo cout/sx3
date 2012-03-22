@@ -8,5 +8,6 @@
 #define SX3_ERROR_MEM_ALLOC 1
 #define SX3_ERROR_BAD_PARAMS 2
 #define SX3_ERROR_CANNOT_OPEN_FILE 3
+#define SX3_ERROR_BAD_FILE 4
 
 #endif
