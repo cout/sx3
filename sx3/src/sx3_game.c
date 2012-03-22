@@ -286,6 +286,20 @@ void sx3_game_update(float dt)
     }
 }
 
+void sx3_zoom(float increment)
+{
+    Vector v;
+    vv_cpy(v, view_dir);
+    vc_mul(v, increment);
+
+    vv_add(eye_point, v);
+    if(g_view_gravity > 0)
+        eye_point[1] = sx3_find_terrain_height(eye_point[0],eye_point[2]) +
+            g_view_altitude;
+    vv_cpy(view_point, eye_point);
+    vv_add(view_point, view_dir);
+}
+
 // sx3_game_animate animates the scene before it is drawn.
 void sx3_game_animate(float dt)
     {
@@ -293,19 +307,10 @@ void sx3_game_animate(float dt)
 
     if(state&(SDL_BUTTON_LMASK|SDL_BUTTON_RMASK))
     {
-        Vector v;
-        vv_cpy(v, view_dir);
-        if(state&SDL_BUTTON_LMASK&~SDL_BUTTON_RMASK)
-            vc_mul(v, g_zoom_increment);
-        else if(state&~SDL_BUTTON_LMASK&SDL_BUTTON_RMASK)
-            vc_mul(v, -g_zoom_increment);
-
-        vv_add(eye_point, v);
-        if(g_view_gravity > 0)
-            eye_point[1] = sx3_find_terrain_height(eye_point[0],eye_point[2]) +
-                g_view_altitude;
-        vv_cpy(view_point, eye_point);
-        vv_add(view_point, view_dir);
+      if(state&SDL_BUTTON_LMASK&~SDL_BUTTON_RMASK)
+          sx3_zoom(g_zoom_increment);
+      else if(state&~SDL_BUTTON_LMASK&SDL_BUTTON_RMASK)
+          sx3_zoom(-g_zoom_increment);
     }
 
     if(g_current_tank >= 0)
@@ -360,7 +365,7 @@ void sx3_game_key_hit(SDLKey key, SDLMod mod, Uint8 state)
             g_display_frame_rate = !g_display_frame_rate;
                break;
 
-        case 'w':
+        case '.':
             // Toggle wireframe mode
             // TODO: This should be fixed
             // g_terrain_wire = !g_terrain_wire;
