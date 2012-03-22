@@ -73,20 +73,22 @@ static int T1[32]= {
     83599,  71378,  60428,  50647,  41945,  34246,  27478,  21581,
     16499,  12183,  8588,   5674,   3403,   1742,   661,    130,};
 
-// This sqrt function is the algorithm described in glibc.  So we need to
-// reference at least one other source here, for copyright purposes (FIX ME!!).
-INLINE float fast_sqrt(float x) {
-    float y;
-    int k, x0, y0;
+// TODO: This sqrt function is the algorithm described in glibc.  So we
+// need to reference at least one other source here, for copyright
+// purposes.
+INLINE float fast_sqrt(float f) {
+    typedef union { float f; int i; } U;
 
-    x0 = *(int*)(&x);
-    k = (x0 >> 1) + 0x1ff80000;
-    y0 = k - T1[31 & (k>>15)];
-    y = *(float*)(&y0);
-    y = (y + x/y)/2;
-    y = (y + x/y)/2;
-    // y = y-(y-x/y)/2;
-    return y;
+    U x, y;
+    int k;
+
+    x.f = f;
+    k = (x.i >> 1) + 0x1ff80000;
+    y.i = k - T1[31 & (k>>15)];
+    y.f = (y.f + x.f/y.f)/2;
+    y.f = (y.f + x.f/y.f)/2;
+
+    return y.f;
 }
 
 // ===========================================================================
