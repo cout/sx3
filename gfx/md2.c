@@ -101,7 +101,10 @@ int parse_md2_fp(FILE *fp, const char *skin, model_t *md2) {
     int                         retcode = MODEL_OK;
 
     /* Get the header */
-    fread(&model, sizeof(md2_t), 1, fp);
+    if (fread(&model, sizeof(md2_t), 1, fp) == 0)
+    {
+      return MODELERR_READ_ERROR;
+    }
 
     /* Fix the endianness of the header */
     if(SDL_BYTEORDER == SDL_BIG_ENDIAN) {
@@ -140,7 +143,11 @@ int parse_md2_fp(FILE *fp, const char *skin, model_t *md2) {
     /* I'm not yet sure how to use multiple skins */
     if(*skin == 0) {
         fseek(fp, model.offsetSkins, SEEK_SET);
-        fread(skin_filename, sizeof(skin_filename), 1, fp);
+        if (fread(skin_filename, sizeof(skin_filename), 1, fp) == 0)
+        {
+          return MODELERR_READ_ERROR;
+        }
+
         /* Load the texture into memory, if necessary */
         texnum = bind_tex(skin_filename, 0);
         md2->skin = texnum;
@@ -157,7 +164,10 @@ int parse_md2_fp(FILE *fp, const char *skin, model_t *md2) {
     /* We should read this into an array of frames, optimally */
     framesize = model.frameSize * model.numFrames;
     fseek(fp, model.offsetFrames, SEEK_SET);
-    fread(&frames[0], framesize, 1, fp);
+    if (fread(&frames[0], framesize, 1, fp) == 0)
+    {
+      return MODELERR_READ_ERROR;
+    }
 
     /* Draw the first frame */
     i = 0;
@@ -193,7 +203,7 @@ int parse_md2_fp(FILE *fp, const char *skin, model_t *md2) {
             float vertex[3];
             
             /* Read the number of GL Commands we are to process */
-            fread(&n, sizeof(int), 1, fp);
+            if (fread(&n, sizeof(int), 1, fp) == 0) break;
             if(feof(fp)) break;
             if(SDL_BYTEORDER == SDL_BIG_ENDIAN) n = SDL_Swap32(n);
             
@@ -205,7 +215,7 @@ int parse_md2_fp(FILE *fp, const char *skin, model_t *md2) {
             }
             
             loc=ftell(fp);
-            fread(glCommandVertex, n * sizeof(glCommandVertex_t), 1, fp);
+            if (fread(glCommandVertex, n * sizeof(glCommandVertex_t), 1, fp) == 0) break;
             if(feof(fp)) break;
 
             for(j = 0; j < n; j++) {
