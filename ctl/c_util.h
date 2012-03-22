@@ -40,7 +40,6 @@
             #x), x)))
 #   define CTL_ASSERT_IS_TYPE_OF(x, type) { \
         type y = x; \
-        CTL_UNUSED_ARG(y); \
         CTL_ASSERT_SAME_TYPE(x, y); \
     }
 #   ifdef CTL_HAS_TYPEOF

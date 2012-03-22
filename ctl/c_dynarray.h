@@ -17,10 +17,6 @@
   }
 
 #define DYNARRAY_TYPE_CHECK(da) { \
-    CTL_UNUSED_ARG(da.count); \
-    CTL_UNUSED_ARG(da.max); \
-    CTL_UNUSED_ARG(da.data_size); \
-    CTL_UNUSED_ARG(da.data); \
     CTL_ASSERT_IS_TYPE_OF(da.count, size_t); \
     CTL_ASSERT_IS_TYPE_OF(da.max, size_t); \
     CTL_ASSERT_IS_TYPE_OF(da.data_size, size_t); \
