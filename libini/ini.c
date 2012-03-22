@@ -69,7 +69,7 @@ int ini_load_config_fp(struct INI_Context_ *ini, FILE *fp) {
                             //on the line that starts the ini section. 
 
     while(TRUE) {
-        fgets(s, sizeof(s), fp);
+        if(fgets(s, sizeof(s), fp) == NULL) break;
         if(feof(fp)) break;
 
         if(s[0] == '#' || s[0] == ';' || is_blank_line(s)) {
