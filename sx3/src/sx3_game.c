@@ -302,17 +302,7 @@ void sx3_zoom(float increment)
 
 // sx3_game_animate animates the scene before it is drawn.
 void sx3_game_animate(float dt)
-    {
-    Uint8 state = SDL_GetMouseState(NULL, NULL);
-
-    if(state&(SDL_BUTTON_LMASK|SDL_BUTTON_RMASK))
-    {
-      if(state&SDL_BUTTON_LMASK&~SDL_BUTTON_RMASK)
-          sx3_zoom(g_zoom_increment);
-      else if(state&~SDL_BUTTON_LMASK&SDL_BUTTON_RMASK)
-          sx3_zoom(-g_zoom_increment);
-    }
-
+{
     if(g_current_tank >= 0)
     {
         struct Tank *t = &g_tanks[g_current_tank];
@@ -363,7 +353,17 @@ void sx3_game_key_hit(SDLKey key, SDLMod mod, Uint8 state)
         case 'r':
             // Toggle frame rate display
             g_display_frame_rate = !g_display_frame_rate;
-               break;
+            break;
+
+        case 'w':
+            // Zoom in
+            sx3_zoom(g_zoom_increment);
+            break;
+
+        case 's':
+            // Zoom out
+            sx3_zoom(-g_zoom_increment);
+            break;
 
         case '.':
             // Toggle wireframe mode
