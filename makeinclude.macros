@@ -60,7 +60,7 @@ else
 	INSTALL=install -p
 endif
 
-LDFLAGS+=-L$(PREFIX)/lib
+STATIC_LDFLAGS+=-L$(PREFIX)/lib
 INCLUDES+=-I$(PREFIX)/include
 CFLAGS+=-DDEBUG -Wall -O3 -g
 
@@ -94,7 +94,7 @@ $(DEPENDENCY_FILE): makedepend
 	$(CC) $(INCLUDES) $(CFLAGS) -c $< -o $@
 
 $(REALMAINOUT): $(MAINOBJ) $(LIBOUT)
-	$(CC) $(MAINOBJ) $(LDFLAGS) $(LIBS) -o $(REALMAINOUT)
+	$(CC) $(MAINOBJ) $(STATIC_LDFLAGS) $(STATIC_LIBS) $(LDFLAGS) $(LIBS) -o $(REALMAINOUT)
 
 $(LIBOUT): $(LIBOBJ)
 	$(AR) rc $@ $?

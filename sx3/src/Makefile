@@ -12,9 +12,11 @@ OUT=$(REALMAINOUT)
 
 CFLAGS+=$(GL_CFLAGS) $(SDL_CFLAGS)
 LDFLAGS+=$(GL_LDFLAGS) $(SDL_LDFLAGS)
+STATIC_LIBS += \
+	-lgfx -lphysics -lini -lgltext -lsx3_utils -lsx3_console
+# TODO: we don't want -lX11 on win32
 LIBS+=  \
-	-lm -lgfx -lphysics -lini -lgltext -lsx3_utils -lsx3_console \
-	$(GL_LIBS) $(SDL_LIBS)
+	-lX11 -lm $(GL_LIBS) $(SDL_LIBS)
 CC=gcc
 CCC=CC
 
